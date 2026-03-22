@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro Popular de Estudios Económicos</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Paleta de colores */
+        :root {
+            --fondo-crema: #F9F6F0; /* Beige/Crema de fondo */
+            --verde-oscuro: #2C4C3B; /* Verde para detalles */
+            --cafe-detalles: #6B4E3D; /* Café para líneas */
+            --texto-negro: #000000; /* Todo el texto en negro */
+        }
+
+        body {
+            background-color: var(--fondo-crema);
+            color: var(--texto-negro);
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            max-width: 800px; /* Ancho ideal para lectura en computadora */
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* Títulos */
+        h1, h2 {
+            font-family: 'Playfair Display', serif;
+            color: var(--texto-negro);
+            margin-bottom: 0.2rem;
+        }
+
+        /* Encabezado */
+        header {
+            text-align: center;
+            border-bottom: 2px solid var(--cafe-detalles); /* Línea café */
+            padding-bottom: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .lema {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 1.1rem;
+            color: var(--texto-negro);
+            font-style: italic;
+            margin-top: 0;
+        }
+
+        /* Contenedor de las 3 secciones */
+        .secciones-contenedor {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+        }
+
+        /* Cada una de las secciones */
+        .seccion {
+            border-left: 5px solid var(--verde-oscuro); /* Detalle verde a la izquierda */
+            padding-left: 20px;
+            border-bottom: 1px solid rgba(107, 78, 61, 0.2); /* Línea café muy tenue abajo */
+            padding-bottom: 1.5rem;
+        }
+
+        .seccion h2 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-top: 0;
+        }
+
+        .subtitulo {
+            font-family: 'Inter', sans-serif;
+            font-weight: 400;
+            font-size: 1.05rem;
+            color: var(--texto-negro);
+            display: block;
+        }
+
+        /* Pie de página */
+        footer {
+            margin-top: 4rem;
+            text-align: center;
+            border-top: 3px solid var(--verde-oscuro); /* Línea gruesa verde */
+            padding-top: 20px;
+            font-size: 0.85rem;
+            font-weight: 300;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Centro Popular de Estudios Económicos</h1>
+        <p class="lema">Construcción y difusión de Ciencia Social aplicada</p>
+    </header>
+
+    <main class="secciones-contenedor">
+        
+        <section class="seccion">
+            <h2>Laboratorio.</h2>
+            <span class="subtitulo">Ejercicios, modelos y análisis cuantitativo</span>
+        </section>
+
+        <section class="seccion">
+            <h2>Recursos.</h2>
+            <span class="subtitulo">Libros, lecturas y herramientas seleccionadas</span>
+        </section>
+
+        <section class="seccion">
+            <h2>Análisis.</h2>
+            <span class="subtitulo">Estudio y crítica aplicada</span>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>© 2026 Luis Leonardo - Centro Popular de Estudios Económicos.<br>
+        Herramienta en construcción.</p>
+    </footer>
+
+</body>
+</html>
