@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Curso de Matemáticas - CPEE</title>
+    <style>
+        body { 
+            background-color: #fff1da; 
+            color: #000;
+            font-family: 'Inter', sans-serif; 
+            padding: 40px; 
+            max-width: 900px; 
+            margin: auto; 
+        }
+        .boton-volver {
+            display: inline-block;
+            margin-bottom: 20px;
+            text-decoration: none;
+            color: #2a4939;
+            font-weight: bold;
+        }
+        h1 { 
+            border-bottom: 2px solid #2B1B12; 
+            padding-bottom: 10px; 
+            color: #2B1B12;
+        }
+        p.descripcion {
+            line-height: 1.6;
+            font-size: 1.1em;
+            margin-bottom: 30px;
+        }
+        /* --- ESTILOS DE LA CUADRÍCULA DE MÓDULOS --- */
+        .grid-modulos { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 20px; 
+        }
+        .modulo-card { 
+            background: rgba(255,255,255,0.5); 
+            padding: 20px; 
+            border: 1px solid #2B1B12; 
+            border-radius: 8px; 
+            transition: 0.3s; 
+            text-decoration: none; 
+            color: black; 
+            display: block;
+        }
+        .modulo-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+            border-left: 8px solid #2a4939; 
+            background: white;
+        }
+        .modulo-bloqueado {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: transparent;
+        }
+        .modulo-bloqueado:hover {
+            transform: none;
+            box-shadow: none;
+            border-left: 1px solid #2B1B12;
+            background: transparent;
+        }
+        .numero { 
+            font-weight: bold; 
+            color: #2a4939; 
+            font-size: 0.85em; 
+            letter-spacing: 1px;
+        }
+        .modulo-card h3 {
+            margin: 10px 0;
+            color: #2B1B12;
+        }
+    </style>
+</head>
+<body>
+    
+    <a href="index.html" class="boton-volver">← Volver al Laboratorio</a>
+    
+    <h1>Matemáticas para la Economía</h1>
+    <p class="descripcion">Selecciona un módulo para comenzar tu ruta de aprendizaje. Los módulos se irán desbloqueando conforme avancemos en el temario.</p>
+
+    <div class="grid-modulos">
+        
+        <a href="fundamentos.html" class="modulo-card">
+            <span class="numero">MÓDULO 1</span>
+            <h3>Fundamentos</h3>
+            <p style="font-size: 0.9em; line-height: 1.4;">Lógica proposicional, teoría de conjuntos y relaciones aplicadas a la economía.</p>
+        </a>
+
+        <div class="modulo-card modulo-bloqueado">
+            <span class="numero">MÓDULO 2</span>
+            <h3>Álgebra</h3>
+            <p style="font-size: 0.9em; line-height: 1.4;">Funciones y sus propiedades. <em>(Próximamente)</em></p>
+        </div>
+
+        <div class="modulo-card modulo-bloqueado">
+            <span class="numero">MÓDULO 3</span>
+            <h3>Álgebra Lineal</h3>
+            <p style="font-size: 0.9em; line-height: 1.4;">Vectores, matrices y sistemas lineales. <em>(Próximamente)</em></p>
+        </div>
+
+    </div>
+
+    <footer style="text-align: center; margin-top: 60px; padding-top: 20px; border-top: 3px solid #2a4939; font-size: 0.9em; color: #2B1B12;">
+        <p style="margin: 5px 0;">© 2026 Centro Popular de Estudios Económicos.</p>
+        <p style="margin: 5px 0;"><em>Herramienta en construcción.</em></p>
+    </footer>
+
+</body>
+</html>

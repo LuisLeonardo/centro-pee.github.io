@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo 1: Fundamentos - CPEE</title>
+    <style>
+        /* ESTILOS GENERALES (MANTENIENDO TU ESTÉTICA OCRE) */
+        body { 
+            background-color: #fff1da; 
+            color: #000; 
+            font-family: 'Inter', sans-serif; 
+            padding: 20px; 
+            max-width: 900px; 
+            margin: auto; 
+        }
+
+        /* CONTENEDOR DE LAS DIAPOSITIVAS */
+        .slide-container { 
+            position: relative; 
+            background: #fff; 
+            border: 2px solid #2B1B12; 
+            border-radius: 8px; 
+            padding: 40px; 
+            min-height: 400px; 
+            box-shadow: 0px 4px 15px rgba(0,0,0,0.1); 
+            margin-top: 30px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        /* ESTILO DE CADA DIAPOSITIVA (OCULTAS POR DEFECTO) */
+        .slide { 
+            display: none; 
+            animation: fade 0.5s; 
+        }
+
+        /* DIAPOSITIVA ACTIVA */
+        .active { 
+            display: block; 
+        }
+
+        @keyframes fade { 
+            from {opacity: 0.4} to {opacity: 1} 
+        }
+
+        /* TÍTULOS Y TEXTOS DENTRO DE LA DIAPO */
+        .slide h2 { 
+            color: #1B3022; 
+            border-bottom: 2px solid #1B3022; 
+            padding-bottom: 10px; 
+            margin-top: 0;
+        }
+
+        .contenido-texto {
+            line-height: 1.8;
+            text-align: justify;
+            font-size: 1.1em;
+        }
+
+        /* CAJA ESPECIAL PARA APLICACIÓN ECONÓMICA */
+        .app-economica { 
+            background: #f0ede6; 
+            padding: 15px; 
+            border-left: 4px solid #2a4939; 
+            margin-top: 20px; 
+            font-style: italic; 
+        }
+
+        /* BOTONES DE NAVEGACIÓN */
+        .nav-buttons { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-top: 30px; 
+        }
+
+        .btn { 
+            padding: 12px 25px; 
+            background: #2B1B12; 
+            color: #D7C4A5; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: bold; 
+            border-radius: 4px; 
+            transition: 0.3s;
+        }
+
+        .btn:hover:not(:disabled) {
+            background: #3d261a;
+        }
+
+        .btn:disabled { 
+            background: #ccc; 
+            color: #666;
+            cursor: not-allowed; 
+        }
+
+        .counter { 
+            text-align: center; 
+            margin-top: 15px; 
+            font-weight: bold; 
+            color: #2B1B12; 
+        }
+
+        .volver {
+            text-decoration: none; 
+            color: #2B1B12; 
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <a href="matematicas_inicio.html" class="volver">← Volver al curso</a>
+
+    <div class="slide-container">
+        
+        <div class="slide active">
+            <h2>¿Para que sirven las matemáticas en economía?</h2>
+            <div class="contenido-texto">
+                <p>En el análisis economico, las matemáticas cumplen funciones criticas que van mas allá del simple cálculo, las matemáticas:</p>
+                <ul>
+                    <li>Nos permite expresar suposiciones y conclusiones mediante símbolos y ecuaciones, evitando caer en ambiguedades.</li>
+                    <li>Al utilizar teoremas matemáticos, el analista se ve forzado a explicar todos los supuestos o condiciones necesarias para no perder el sentido económico.</li>
+                    <li>Las matemáticas nos permiten trabajar con n variables, permitiendonos hacer modelos que reflejen la realidad.</li>
+                    <li>Herramientas como el cálculo nos sirve para optimizar (maximizar ganancias o minimizar costos) y el ágebra lineal para analizar la interdependecia entre los distintos sectores de una economía</li>               
+                </ul>
+                
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>Título de la Diapositiva 2</h2>
+            <div class="contenido-texto">
+                <p>Tu contenido para la segunda diapositiva.</p>
+                <div class="app-economica">
+                    <strong>Aplicación Económica:</strong> ....
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <h2>Título de la Diapositiva 3</h2>
+            <div class="contenido-texto">
+                <p>Tu contenido para la tercera diapositiva.</p>
+            </div>
+        </div>
+        <div class="controles-footer">
+            <div class="nav-buttons">
+                <button class="btn" id="prevBtn" onclick="changeSlide(-1)" disabled>Anterior</button>
+                <button class="btn" id="nextBtn" onclick="changeSlide(1)">Siguiente</button>
+            </div>
+            <div class="counter" id="slideCounter">Página 1 de 3</div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const counter = document.getElementById('slideCounter');
+        const prevBtn = document.getElementById('prevBtn');
+        const nextBtn = document.getElementById('nextBtn');
+
+        function updateUI() {
+            // Actualizar el número de página
+            counter.innerText = `Página ${currentSlide + 1} de ${slides.length}`;
+            
+            // Bloquear/Desbloquear botones
+            prevBtn.disabled = (currentSlide === 0);
+            nextBtn.disabled = (currentSlide === slides.length - 1);
+        }
+
+        function changeSlide(n) {
+            // Quitar clase activa a la actual
+            slides[currentSlide].classList.remove('active');
+            
+            // Cambiar el índice
+            currentSlide += n;
+            
+            // Poner clase activa a la nueva
+            slides[currentSlide].classList.add('active');
+            
+            updateUI();
+        }
+
+        // Inicializar el contador correctamente al cargar
+        updateUI();
+    </script>
+</body>
+</html>
