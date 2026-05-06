@@ -742,27 +742,22 @@ footer {
 <div class="slide">
     <h2>5.7 Visualizando la Tangente</h2>
     <div class="contenido-texto" style="font-size: 0.9rem;">
-        <p>Una recta secante corta la curva en dos puntos y nos da un "promedio". La magia del límite permite acercar esos dos puntos hasta que se vuelven uno solo: la <strong>recta tangente</strong>.</p>
+        <p>Una recta secante corta la curva en dos puntos y nos da un "promedio". La magia del límite permite acercar esos dos puntos hasta que se vuelven uno solo: la <strong>recta tangente</strong>. Observa cómo la pendiente cambia dinámicamente a lo largo de la curva:</p>
         
-        <!-- INICIO DE GRÁFICA SVG: SECANTE A TANGENTE -->
-        <div style="text-align: center; margin: 10px 0;">
-            <svg viewBox="0 0 400 200" width="100%" max-width="400px" style="background-color: #fafafa; border: 1px solid #ddd; border-radius: 8px;">
-                <!-- Ejes -->
-                <line x1="30" y1="170" x2="350" y2="170" stroke="#888" stroke-width="2" />
-                <line x1="30" y1="170" x2="30" y2="20" stroke="#888" stroke-width="2" />
-                
-                <!-- Curva -->
-                <path d="M 30 150 Q 200 150 350 20" fill="none" stroke="#2a4939" stroke-width="3" />
-                
-                <!-- Tangente -->
-                <line x1="120" y1="140" x2="320" y2="30" stroke="#f0ad4e" stroke-width="2" />
-                <circle cx="220" cy="85" r="5" fill="#d9534f" />
-                
-                <text x="170" y="70" fill="#d9534f" font-size="12" font-weight="bold">Pendiente = f'(x)</text>
-                <text x="325" y="25" fill="#f0ad4e" font-size="12">Tangente</text>
+        <div style="text-align: center; margin: 10px 0; background: #fafafa; border: 1px solid #ddd; border-radius: 12px; padding: 15px;">
+            <svg id="graficaAnimada" viewBox="0 0 500 280" width="100%" style="max-height: 250px;">
+                <line x1="50" y1="250" x2="460" y2="250" stroke="#777" stroke-width="2"/>
+                <line x1="50" y1="250" x2="50" y2="30" stroke="#777" stroke-width="2"/>
+
+                <path id="curvaDinamica" fill="none" stroke="#2a4939" stroke-width="4"/>
+
+                <line id="tangenteDinamica" stroke="#f0ad4e" stroke-width="3"/>
+
+                <circle id="puntoDinamico" r="6" fill="#d9534f"/>
+
+                <text id="infoDinamica" x="70" y="50" fill="#333" font-size="14" font-weight="bold"></text>
             </svg>
         </div>
-        
         <p>La fórmula formal (la definición por límite) de la derivada es la base matemática de este acercamiento:</p>
         <p style="text-align: center; font-size: 1.2rem;">
             $$ f'(x) = \lim_{h \to 0} \frac{f(x+h) - f(x)}{h} $$
@@ -770,6 +765,62 @@ footer {
     </div>
 </div>
 
+<script>
+(function() {
+    const curva = document.getElementById("curvaDinamica");
+    const tangente = document.getElementById("tangenteDinamica");
+    const punto = document.getElementById("puntoDinamico");
+    const info = document.getElementById("infoDinamica");
+
+    if (!curva) return; // Seguridad
+
+    function f(x) { return 0.003 * Math.pow(x - 50, 2) + 60; }
+    function fp(x) { return 0.006 * (x - 50); }
+    function svgX(x) { return x + 50; }
+    function svgY(y) { return 250 - y; }
+
+    // Dibujar la curva
+    let d = "";
+    for (let x = 0; x <= 400; x++) {
+        let y = f(x);
+        d += (x === 0 ? "M " : "L ") + svgX(x) + " " + svgY(y) + " ";
+    }
+    curva.setAttribute("d", d);
+
+    let xAnim = 0;
+    let direccion = 1;
+
+    // Función de animación
+    function animar() {
+        let y = f(xAnim);
+        let pendiente = fp(xAnim);
+        
+        let px = svgX(xAnim);
+        let py = svgY(y);
+
+        punto.setAttribute("cx", px);
+        punto.setAttribute("cy", py);
+
+        let largo = 80; // Longitud controlada de la tangente
+        let dx = largo;
+        let dy = pendiente * largo;
+
+        tangente.setAttribute("x1", px - dx);
+        tangente.setAttribute("y1", py + dy);
+        tangente.setAttribute("x2", px + dx);
+        tangente.setAttribute("y2", py - dy);
+
+        info.textContent = `x = ${xAnim.toFixed(0)} | f'(x) = ${pendiente.toFixed(2)}`;
+
+        xAnim += direccion * 1.5; // Velocidad
+        if (xAnim >= 400 || xAnim <= 0) direccion *= -1; // Rebote
+
+        requestAnimationFrame(animar);
+    }
+    
+    animar();
+})();
+</script>
 <!-- ── TEMA 4: REGLAS DE DERIVACIÓN ── -->
 <!-- ── DIAPOSITIVA 9 ── -->
 <div class="slide">
