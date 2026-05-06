@@ -615,28 +615,23 @@ footer {
     </div>
 </div>
 
-<!-- ── DIAPOSITIVA 3 (Con Gráfica) ── -->
 <div class="slide">
     <h2>7.3 Visualizando Curvas de Nivel</h2>
     <div class="contenido-texto" style="font-size: 0.9rem;">
         <p>Observa cómo la montaña 3D se aplasta en un mapa 2D. Cada línea representa una altura diferente. En economía, queremos saltar a la curva más alta posible.</p>
         
-        <!-- INICIO DE GRÁFICA SVG: CURVAS DE NIVEL -->
         <div style="text-align: center; margin: 10px 0;">
             <svg viewBox="0 0 400 220" width="100%" max-width="350px" style="background-color: #fafafa; border: 1px solid #ddd; border-radius: 8px;">
-                <!-- Ejes -->
                 <line x1="40" y1="180" x2="360" y2="180" stroke="#888" stroke-width="2" />
                 <line x1="40" y1="180" x2="40" y2="20" stroke="#888" stroke-width="2" />
                 
-                <!-- Curvas de Indiferencia (Convexas al origen) -->
-                <path d="M 60 160 Q 100 100 160 60" fill="none" stroke="#2a4939" stroke-width="2" />
-                <path d="M 80 170 Q 140 120 220 80" fill="none" stroke="#2a4939" stroke-width="2" />
-                <path d="M 110 180 Q 180 140 280 100" fill="none" stroke="#2a4939" stroke-width="2" />
+                <path d="M 60 40 Q 70 150 180 160" fill="none" stroke="#2a4939" stroke-width="2" />
+                <path d="M 100 30 Q 110 130 240 140" fill="none" stroke="#2a4939" stroke-width="2" />
+                <path d="M 140 20 Q 150 110 300 120" fill="none" stroke="#2a4939" stroke-width="2" />
                 
-                <!-- Textos -->
-                <text x="170" y="65" font-size="12" font-weight="bold">U = 10</text>
-                <text x="230" y="85" font-size="12" font-weight="bold">U = 20</text>
-                <text x="290" y="105" font-size="12" font-weight="bold">U = 30</text>
+                <text x="185" y="165" font-size="12" font-weight="bold">U = 10</text>
+                <text x="245" y="145" font-size="12" font-weight="bold">U = 20</text>
+                <text x="305" y="125" font-size="12" font-weight="bold">U = 30</text>
                 
                 <text x="340" y="200" font-size="12" font-weight="bold">Bien X</text>
                 <text x="5" y="40" font-size="12" font-weight="bold">Bien Y</text>
@@ -999,38 +994,34 @@ footer {
     <div class="contenido-texto" style="font-size: 0.9rem;">
         <p>Geométricamente, Lagrange busca el punto exacto donde la Curva de Nivel (Indiferencia) es perfectamente <strong>tangente</strong> (roza en un solo punto) a la línea de la Restricción Presupuestaria.</p>
         
-        <!-- INICIO DE GRÁFICA SVG: TANGENCIA LAGRANGE -->
         <div style="text-align: center; margin: 10px 0;">
             <svg viewBox="0 0 400 220" width="100%" max-width="350px" style="background-color: #fafafa; border: 1px solid #ddd; border-radius: 8px;">
-                <!-- Curvas de Indiferencia -->
-                <path d="M 60 140 Q 100 80 160 40" fill="none" stroke="#2a4939" stroke-width="1" />
-                <path d="M 70 170 Q 140 100 230 60" fill="none" stroke="#2a4939" stroke-width="3" /> <!-- Óptima -->
-                <path d="M 110 190 Q 180 130 290 80" fill="none" stroke="#2a4939" stroke-width="1" />
+                <line x1="50" y1="180" x2="360" y2="180" stroke="#888" stroke-width="2" />
+                <line x1="50" y1="180" x2="50" y2="20" stroke="#888" stroke-width="2" />
                 
-                <!-- Restricción Presupuestaria (Línea Recta Diagonal) -->
-                <line x1="280" y1="180" x2="40" y2="20" stroke="#d9534f" stroke-width="2" />
+                <path d="M 70 60 Q 90 150 190 160" fill="none" stroke="#2a4939" stroke-width="1" opacity="0.5" />
+                <path d="M 110 40 Q 130 140 270 150" fill="none" stroke="#2a4939" stroke-width="3" /> <path d="M 160 30 Q 180 120 330 130" fill="none" stroke="#2a4939" stroke-width="1" opacity="0.5" />
                 
-                <!-- Punto Óptimo (Tangencia) -->
-                <circle cx="140" cy="87" r="5" fill="#f0ad4e" stroke="#333" stroke-width="1" />
-                <line x1="140" y1="87" x2="140" y2="180" stroke="#666" stroke-dasharray="3,3" />
-                <line x1="140" y1="87" x2="40" y2="87" stroke="#666" stroke-dasharray="3,3" />
+                <line x1="50" y1="50" x2="320" y2="180" stroke="#d9534f" stroke-width="2" />
                 
-                <!-- Ejes -->
-                <line x1="40" y1="180" x2="360" y2="180" stroke="#888" stroke-width="2" />
-                <line x1="40" y1="180" x2="40" y2="20" stroke="#888" stroke-width="2" />
+                <circle cx="160" cy="103" r="5" fill="#f0ad4e" stroke="#333" stroke-width="1" />
                 
-                <!-- Textos -->
-                <text x="145" y="75" font-size="12" font-weight="bold">Óptimo (Tangencia)</text>
-                <text x="290" y="170" font-size="11" fill="#d9534f">Restricción g(x,y)=M</text>
-                <text x="135" y="195" font-size="12">x*</text>
-                <text x="20" y="90" font-size="12">y*</text>
+                <line x1="160" y1="103" x2="160" y2="180" stroke="#666" stroke-dasharray="3,3" />
+                <line x1="160" y1="103" x2="50" y2="103" stroke="#666" stroke-dasharray="3,3" />
+                
+                <text x="170" y="95" font-size="12" font-weight="bold">Óptimo (Tangencia)</text>
+                <text x="260" y="195" font-size="11" fill="#d9534f" font-weight="bold">Restricción g(x,y)=M</text>
+                <text x="155" y="195" font-size="12" font-weight="bold">x*</text>
+                <text x="25" y="108" font-size="12" font-weight="bold">y*</text>
+                
+                <text x="340" y="175" font-size="12" font-weight="bold">Bien X</text>
+                <text x="10" y="35" font-size="12" font-weight="bold">Bien Y</text>
             </svg>
         </div>
         
-        <p>En ese punto de tangencia, las pendientes de ambas líneas son idénticas. Matemáticamente, significa que sus gradientes son proporcionales: $\nabla f = \lambda \nabla g$.</p>
+        <p>En ese punto de tangencia, las pendientes de ambas líneas son idénticas. Matemáticamente, esto significa que sus gradientes son proporcionales: $\nabla f = \lambda \nabla g$.</p>
     </div>
 </div>
-
 <!-- ── DIAPOSITIVA 25 ── -->
 <div class="slide">
     <h2>7.18 CPO de Lagrange</h2>
