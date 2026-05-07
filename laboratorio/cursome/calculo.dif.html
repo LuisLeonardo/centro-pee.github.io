@@ -1035,10 +1035,6 @@ footer {
 
                 <text id="textoOpt" x="70" y="40" font-size="14" font-weight="bold" fill="#333"></text>
             </svg>
-            <p style="font-size: 0.8rem; color: #666; margin-top: 5px; font-style: italic;">
-                La animación se detiene cuando $\pi'(Q)=0$.<br>
-                Porque incluso las derivadas necesitan contemplar el vacío durante 5 segundos.
-            </p>
         </div>
         <p>Matemáticamente: Si $\pi = Ingreso - Costo$, al derivar y aplicar el criterio ($\pi' = 0$), obtenemos que $Ingreso' - Costo' = 0$, lo que implica $IMg = CMg$.</p>
     </div>
@@ -1117,7 +1113,7 @@ footer {
 
         // Movimiento
         if (!pausado) {
-            xAnim += direccion * 1.5; // Velocidad ajustada
+            xAnim += direccion * 1.0; // Velocidad ajustada
             if (xAnim >= 400 || xAnim <= 0) {
                 direccion *= -1;
             }
