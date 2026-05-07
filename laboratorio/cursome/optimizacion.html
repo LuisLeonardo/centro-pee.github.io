@@ -884,6 +884,7 @@ footer {
         </ul>
         <p style="margin-top: 25px; font-weight: bold;">El puente teórico está completo. Es momento de aterrizar estos modelos abstractos en bases de datos reales. ¡Nos vemos en el <strong>Módulo 9: Estadística 1</strong>!</p>
         
+       <!-- BOTÓN DE COMPLETADO (Con ID actualizado para el Módulo 4) -->
         <div style="text-align: center; margin-top: 50px; margin-bottom: 30px;">
             <button id="btnCompletarM8" style="background-color: #2a4939; color: #fff1da; padding: 14px 28px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; font-size: 1.05rem; transition: background 0.3s;">
                 Marcar Módulo 8 como Completado
@@ -1001,7 +1002,7 @@ footer {
         const db = getFirestore(app);
 
         // Conectamos con el botón físico usando su ID
-        const btnCompletar = document.getElementById("btnCompletarM8s");
+        const btnCompletar = document.getElementById("btnCompletarM8");
 
         // Función para cambiar el aspecto cuando ya está guardado
         function marcarBotonComoCompletado() {
