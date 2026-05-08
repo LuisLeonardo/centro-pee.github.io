@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo V: Neoinstitucionalismo I — CPEE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
+<style>
+/* SHARED BASE FOR CURSO CE */
+:root {
+    --crema: #fff1da;
+    --verde: #2a4939;
+    --verde-medio: #3d6655;
+    --cafe: #2B1B12;
+    --cafe-claro: #6b4c35;
+    --naranja: #d35a34;
+    --pizarra-institucional: #2c3e50; /* Color temático Neoinstitucionalismo */
+    --negro: #111111;
+    --texto-suave: #4a3828;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background-color: var(--crema); color: var(--negro); font-family: 'DM Sans', sans-serif; line-height: 1.7; overflow-x: hidden; }
+
+/* MENU */
+.menu-trigger { position: fixed; top: 22px; left: 24px; z-index: 1100; background: var(--cafe); border: none; border-radius: 8px; width: 44px; height: 44px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; transition: background 0.2s; }
+.menu-trigger:hover { background: var(--pizarra-institucional); }
+.menu-trigger span { display: block; width: 20px; height: 2px; background: var(--crema); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease; transform-origin: center; }
+.menu-trigger.abierto span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-trigger.abierto span:nth-child(2) { opacity: 0; width: 0; }
+.menu-trigger.abierto span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.menu-overlay { position: fixed; inset: 0; background: rgba(43,27,18,0.45); backdrop-filter: blur(3px); opacity: 0; pointer-events: none; z-index: 1050; transition: opacity 0.3s ease; }
+.menu-overlay.visible { opacity: 1; pointer-events: all; }
+.menu-panel { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: var(--cafe); z-index: 1090; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.22,1,0.36,1); display: flex; flex-direction: column; padding: 80px 0 40px; }
+.menu-panel.abierto { transform: translateX(0); }
+.menu-panel-logo { padding: 0 28px 32px; border-bottom: 1px solid rgba(215,196,165,0.2); margin-bottom: 12px; }
+.menu-panel-logo span { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: #D7C4A5; line-height: 1.3; display: block; }
+.menu-panel-logo em { font-family: 'Libre Baskerville', serif; font-size: 0.78rem; color: rgba(215,196,165,0.55); font-style: italic; }
+.menu-panel nav a { display: flex; align-items: center; gap: 12px; padding: 13px 28px; color: #D7C4A5; text-decoration: none; font-size: 0.95rem; font-weight: 400; border-left: 3px solid transparent; transition: background 0.2s, border-color 0.2s, color 0.2s; }
+.menu-panel nav a:hover { background: rgba(215,196,165,0.07); border-left-color: var(--pizarra-institucional); color: #f0dfc0; }
+.menu-panel nav a .nav-num { font-size: 0.7rem; opacity: 0.4; font-weight: 500; min-width: 18px; }
+
+/* BREADCRUMB */
+.breadcrumb { padding: 18px 48px 18px 90px; display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--cafe-claro); opacity: 0.7; border-bottom: 1px solid rgba(43,27,18,0.08); flex-wrap: wrap; }
+.breadcrumb a { color: inherit; text-decoration: none; transition: color 0.2s; }
+.breadcrumb a:hover { color: var(--pizarra-institucional); }
+.breadcrumb .sep { opacity: 0.4; }
+.breadcrumb .actual { color: var(--pizarra-institucional); opacity: 1; }
+
+/* HEADER */
+header { position: relative; padding: 48px 48px 40px; border-bottom: 1px solid rgba(43,27,18,0.15); overflow: hidden; }
+.header-bg-deco { position: absolute; inset: 0; pointer-events: none; z-index: 0; }
+.header-bg-deco::before { content: ''; position: absolute; top: -40px; right: -60px; width: 260px; height: 260px; border-radius: 50%; border: 1px solid rgba(44,62,80,0.1); }
+.header-bg-deco::after { content: ''; position: absolute; top: 10px; right: 10px; width: 150px; height: 150px; border-radius: 50%; border: 1px solid rgba(44,62,80,0.07); }
+.header-inner { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.header-texto { flex: 1; }
+.header-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--pizarra-institucional); margin-bottom: 12px; opacity: 0; animation: fadeUp 0.6s ease 0.1s forwards; }
+.header-eyebrow::before { content: ''; display: block; width: 28px; height: 2px; background: var(--pizarra-institucional); }
+header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(1.7rem, 3.5vw, 2.5rem); font-weight: 400; line-height: 1.2; color: var(--cafe); opacity: 0; animation: fadeUp 0.7s ease 0.2s forwards; }
+.modulo-badge { flex-shrink: 0; background: rgba(44,62,80,0.08); border: 1px solid rgba(44,62,80,0.15); border-radius: 10px; padding: 14px 20px; text-align: center; opacity: 0; animation: fadeUp 0.6s ease 0.3s forwards; align-self: center; }
+.modulo-badge .num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--pizarra-institucional); line-height: 1; display: block; }
+.modulo-badge .etiqueta { font-size: 0.65rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--pizarra-institucional); opacity: 0.8; }
+
+/* MAIN */
+main { max-width: 820px; margin: 0 auto; padding: 48px 48px 80px; }
+
+/* SLIDE WRAPPER */
+.slide-wrapper { opacity: 0; animation: fadeUp 0.6s ease 0.2s forwards; }
+.progress-bar-outer { height: 4px; background: rgba(43,27,18,0.1); border-radius: 4px; margin-bottom: 4px; overflow: hidden; }
+.progress-bar-inner { height: 100%; background: var(--pizarra-institucional); border-radius: 4px; transition: width 0.4s ease; }
+.progress-label { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+.progress-texto { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--cafe-claro); opacity: 0.55; }
+.slide-counter-txt { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.06em; color: var(--pizarra-institucional); opacity: 0.9; }
+
+/* SLIDE CONTAINER */
+.slide-container { background: rgba(255,255,255,0.65); border: 1px solid rgba(43,27,18,0.1); border-radius: 12px; padding: 36px 40px 28px; min-height: 420px; position: relative; overflow: hidden; box-shadow: 0 4px 20px rgba(43,27,18,0.06); display: flex; flex-direction: column; gap: 20px; }
+.slide-container::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; background: var(--pizarra-institucional); border-radius: 4px 0 0 4px; }
+
+/* SLIDES */
+.slide { display: none; animation: fadeSlide 0.4s ease; flex: 1; }
+.slide.active { display: block; }
+@keyframes fadeSlide { from { opacity: 0; transform: translateX(12px); } to { opacity: 1; transform: translateX(0); } }
+
+/* SLIDE TYPE BADGE */
+.slide-tipo { display: inline-flex; align-items: center; gap: 6px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; margin-bottom: 14px; }
+.tipo-objetivo { background: rgba(44,62,80,0.1); color: var(--pizarra-institucional); }
+.tipo-teoria { background: rgba(43,27,18,0.08); color: var(--cafe); }
+.tipo-analisis { background: rgba(107,76,53,0.1); color: var(--cafe-claro); }
+.tipo-diagrama { background: rgba(44,62,80,0.08); color: var(--pizarra-institucional); }
+.tipo-recursos { background: rgba(42,73,57,0.06); color: var(--verde-medio); }
+
+/* SLIDE CONTENT */
+.slide h2 { font-family: 'DM Serif Display', serif; font-size: 1.5rem; font-weight: 400; color: var(--cafe); margin-bottom: 18px; line-height: 1.3; padding-bottom: 12px; border-bottom: 1px solid rgba(43,27,18,0.1); }
+.contenido-texto { font-size: 0.95rem; color: var(--texto-suave); line-height: 1.85; }
+.contenido-texto p { margin-bottom: 15px; }
+.contenido-texto ul, .contenido-texto ol { padding-left: 20px; margin: 15px 0; }
+.contenido-texto li { margin-bottom: 8px; }
+.contenido-texto li::marker { color: var(--pizarra-institucional); }
+.contenido-texto strong { color: var(--cafe); font-weight: 600; }
+.contenido-texto em { font-family: 'Libre Baskerville', serif; font-style: italic; color: var(--cafe-claro); }
+
+/* SPECIAL BOXES */
+.caja-teorica { background: rgba(44,62,80,0.05); border: 1px solid rgba(44,62,80,0.14); border-left: 4px solid var(--pizarra-institucional); border-radius: 0 8px 8px 0; padding: 18px 22px; margin: 20px 0; font-size: 0.9rem; color: var(--texto-suave); line-height: 1.7; }
+.caja-teorica strong { color: var(--pizarra-institucional); font-weight: 600; display: block; margin-bottom: 5px; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+.caja-analisis { background: rgba(255,241,218,0.8); border: 1px solid rgba(43,27,18,0.14); border-left: 4px solid var(--cafe); border-radius: 0 8px 8px 0; padding: 18px 22px; margin: 20px 0; font-size: 0.9rem; color: var(--texto-suave); line-height: 1.7; }
+.caja-analisis strong { color: var(--cafe); font-weight: 600; display: block; margin-bottom: 5px; font-size: 0.75rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* RECURSOS Y VIDEOS */
+.recursos-grid { display: flex; flex-direction: column; gap: 10px; margin: 15px 0; }
+.recurso-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px 16px; background: rgba(255,255,255,0.6); border: 1px solid rgba(43,27,18,0.09); border-radius: 8px; font-size: 0.85rem; color: var(--texto-suave); }
+.recurso-item a { color: var(--pizarra-institucional); text-decoration: none; font-weight: 600; }
+.recurso-item a:hover { text-decoration: underline; }
+
+.video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; background: rgba(43,27,18,0.05); margin: 15px 0; border: 1px solid rgba(0,0,0,0.1); }
+.video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: none; }
+
+/* NAV BUTTONS */
+.nav-buttons { display: flex; justify-content: space-between; align-items: center; gap: 12px; padding-top: 15px; border-top: 1px solid rgba(43,27,18,0.08); }
+.btn-nav { display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; background: var(--cafe); color: #D7C4A5; border: none; cursor: pointer; font-family: 'DM Sans', sans-serif; font-size: 0.85rem; font-weight: 600; border-radius: 8px; transition: background 0.2s, transform 0.2s; }
+.btn-nav:hover:not(:disabled) { background: var(--pizarra-institucional); transform: translateY(-1px); }
+.btn-nav:disabled { background: rgba(43,27,18,0.1); color: rgba(43,27,18,0.3); cursor: not-allowed; transform: none; }
+.puntos-nav { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; justify-content: center; }
+.punto { width: 8px; height: 8px; border-radius: 50%; background: rgba(43,27,18,0.15); transition: background 0.3s, transform 0.3s; cursor: pointer; border: none; padding: 0; }
+.punto.activo { background: var(--pizarra-institucional); transform: scale(1.25); }
+
+/* MODULE NAV */
+.modulo-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 28px; gap: 12px; }
+.btn-modulo { display: inline-flex; align-items: center; gap: 8px; padding: 10px 18px; background: rgba(255,255,255,0.6); border: 1px solid rgba(43,27,18,0.12); color: var(--texto-suave); text-decoration: none; font-size: 0.82rem; font-weight: 500; border-radius: 8px; transition: background 0.2s, border-color 0.2s, color 0.2s; }
+.btn-modulo:hover { background: rgba(255,255,255,0.9); border-color: var(--pizarra-institucional); color: var(--pizarra-institucional); }
+
+/* CIERRE */
+.slide-cierre { text-align:center; padding: 20px 0; }
+.cierre-emoji { font-size:3.5rem; margin-bottom:18px; display:block; }
+.cierre-titulo { font-family:'DM Serif Display',serif; font-size:1.8rem; color: var(--pizarra-institucional); margin-bottom:14px; }
+.btn-completar { display:inline-flex; align-items:center; justify-content: center; width: 100%; max-width: 350px; margin-top:30px; padding:16px 20px; background:var(--pizarra-institucional); color:white; border:none; border-radius:8px; font-family:'DM Sans',sans-serif; font-size:1.1rem; font-weight:700; cursor:pointer; transition:background 0.25s,transform 0.2s; }
+.btn-completar:hover:not(:disabled) { background:#1a252f; transform:translateY(-2px); }
+.btn-completar:disabled { background:var(--cafe-claro); cursor:default; opacity:0.75; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+</head>
+<body>
+
+<button class="menu-trigger" id="menuBtn" aria-label="Abrir menú" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+<div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+<aside class="menu-panel" id="menuPanel" aria-hidden="true">
+    <div class="menu-panel-logo"><span>Centro Popular de<br>Estudios Económicos</span><em>Ciencia Social aplicada</em></div>
+    <nav>
+        <a href="../../index.html"><span class="nav-num">00</span> Inicio</a>
+        <a href="../lab.html"><span class="nav-num">01</span> Laboratorio</a>
+        <a href="ce_inicio.html"><span class="nav-num">02</span> Índice del Curso</a>
+    </nav>
+</aside>
+
+<div class="breadcrumb">
+    <a href="../lab.html">Laboratorio</a><span class="sep">/</span>
+    <a href="ce_inicio.html">Estructura y Crisis</a><span class="sep">/</span>
+    <span class="actual">Módulo V</span>
+</div>
+
+<header>
+    <div class="header-bg-deco"></div>
+    <div class="header-inner">
+        <div class="header-texto">
+            <p class="header-eyebrow">Microfundamentos y Sociedad</p>
+            <h1>Neoinstitucionalismo I: Reglas y Costos</h1>
+        </div>
+        <div class="modulo-badge"><span class="num">V</span><span class="etiqueta">Módulo</span></div>
+    </div>
+</header>
+
+<main>
+<div class="slide-wrapper">
+    <div class="progress-bar-outer"><div class="progress-bar-inner" id="progressBar"></div></div>
+    <div class="progress-label">
+        <span class="progress-texto">Desarrollo Teórico</span>
+        <span class="slide-counter-txt" id="slideCounter"></span>
+    </div>
+    
+    <div class="slide-container">
+
+        <div class="slide active">
+            <span class="slide-tipo tipo-objetivo">🎯 Introducción y Objetivos</span>
+            <h2>Abriendo la "caja negra" del mercado</h2>
+            <div class="contenido-texto">
+                <p>La economía ortodoxa nos enseñó que los mercados operan sin fricciones, donde compradores y vendedores tienen información perfecta. El <strong>Neoinstitucionalismo Económico (NIE)</strong>, liderado por pensadores como Douglass North, Joseph Stiglitz y analizado magistralmente por José Ayala, destruye este mito: <em>el intercambio en el mundo real es costoso, incierto y propenso al engaño</em>.</p>
+                
+                <div class="caja-teorica">
+                    <strong>Objetivos de Aprendizaje</strong>
+                    <ol>
+                        <li>Distinguir estructuralmente entre <em>Instituciones</em> (las reglas) y <em>Organizaciones</em> (los jugadores).</li>
+                        <li>Comprender el concepto disruptivo de los <strong>Costos de Transacción</strong>.</li>
+                        <li>Analizar cómo la <em>Asimetría de la Información</em> (Stiglitz) y la <em>Racionalidad Limitada</em> (Simon) alteran la conducta económica humana.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo tipo-teoria">📖 Explicación Conceptual</span>
+            <h2>Las reglas del juego</h2>
+            <div class="contenido-texto">
+                <p>En el lenguaje cotidiano, solemos llamar "institución" a una secretaría de gobierno o a una universidad. Para la teoría económica, esto es un error conceptual grave.</p>
+                
+                <p>Siguiendo a Douglass North, las <strong>Instituciones</strong> son "las reglas del juego en una sociedad, o los constreñimientos humanamente diseñados que estructuran la interacción humana". Se dividen en:</p>
+                
+                <ul>
+                    <li><strong>Instituciones Formales:</strong> Constituciones, leyes de propiedad, contratos, regulaciones comerciales.</li>
+                    <li><strong>Instituciones Informales:</strong> Costumbres, tabúes, redes de confianza, sobornos, nepotismo. A menudo, son más poderosas que las formales.</li>
+                </ul>
+
+                <p>Por otro lado, las <strong>Organizaciones</strong> son los "jugadores": partidos políticos, empresas, sindicatos, cárteles. Las organizaciones se crean para ganar el juego basándose en las reglas (instituciones) existentes. Si las reglas premian el monopolio y la corrupción, las organizaciones que prosperarán serán monopolistas y corruptas.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo tipo-teoria">📖 La fricción económica</span>
+            <h2>Los Costos de Transacción</h2>
+            <div class="contenido-texto">
+                <p>El modelo neoclásico tradicional asume que si quieres comprar un terreno, simplemente pagas y es tuyo. El premio Nobel Ronald Coase demostró que usar el mecanismo de mercado tiene un costo oculto: <strong>Los Costos de Transacción</strong>.</p>
+                
+                <p>Antes de que dos partes intercambien, incurren en costos ex-ante y ex-post:</p>
+                <ul>
+                    <li><strong>Costos de Búsqueda y Medición:</strong> Tiempo invertido en encontrar al vendedor, verificar que el terreno exista y que sus escrituras sean válidas.</li>
+                    <li><strong>Costos de Negociación:</strong> Redactar contratos y pagar abogados.</li>
+                    <li><strong>Costos de Ejecución (Enforcement):</strong> Asegurarse de que el vendedor no te estafe después de pagar. Si te estafa, el costo de ir a un tribunal para exigir justicia.</li>
+                </ul>
+
+                <div class="caja-teorica">
+                    <strong>La Función de las Instituciones:</strong>
+                    Si los costos de transacción son demasiado altos (porque no hay leyes claras o los jueces son corruptos), el intercambio económico simplemente <em>no ocurre</em>. Las instituciones eficientes (como un registro público de la propiedad transparente) sirven para <strong>reducir drásticamente estos costos</strong>, permitiendo que la economía crezca.
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo tipo-teoria">📖 Economía de la Información</span>
+            <h2>Asimetría y Racionalidad Limitada</h2>
+            <div class="contenido-texto">
+                <p>La existencia de costos de transacción se debe a que nuestra mente y nuestro acceso a los datos son imperfectos.</p>
+                
+                <p><strong>1. Racionalidad Limitada (Herbert Simon):</strong> El ser humano no es la "supercomputadora" calculadora que asume la economía clásica. Nuestra capacidad cognitiva es limitada; tomamos decisiones subóptimas basándonos en atajos mentales (heurísticas).</p>
+
+                <p><strong>2. Asimetría de la Información (Joseph Stiglitz):</strong> En un intercambio, casi siempre una parte sabe más que la otra. El vendedor del auto usado sabe si el motor falla; el comprador, no. Esto genera dos patologías institucionales graves:</p>
+                
+                <ul>
+                    <li><strong>Selección Adversa (Ex-ante):</strong> Los peores productos o actores expulsan a los buenos del mercado porque el comprador no puede distinguirlos.</li>
+                    <li><strong>Riesgo Moral (Ex-post):</strong> Una vez firmado un contrato (ej. un seguro médico), una parte altera su comportamiento de forma negligente porque la otra parte ya no puede vigilarla eficazmente.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo tipo-diagrama">📊 Diagrama Estructural</span>
+            <h2>El Puente Institucional</h2>
+            <div class="contenido-texto">
+                <p>Observa cómo la incertidumbre separa a los actores económicos, y cómo el marco institucional actúa como el único "puente" que permite realizar la transacción.</p>
+                
+                <div style="text-align: center; margin: 25px 0; overflow-x: auto;">
+                    <svg viewBox="0 0 700 350" width="100%" min-width="600px" style="background-color: #fafafa; border: 1px solid #ddd; border-radius: 12px; font-family: 'DM Sans', sans-serif; box-shadow: 0 4px 12px rgba(0,0,0,0.05);">
+                        <defs>
+                            <marker id="arrowDark" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+                                <path d="M0,0 L0,6 L9,3 z" fill="#2c3e50" />
+                            </marker>
+                        </defs>
+
+                        <rect x="50" y="150" width="100" height="60" rx="8" fill="#fff" stroke="#d35a34" stroke-width="2"/>
+                        <text x="100" y="185" font-size="14" font-weight="bold" fill="#d35a34" text-anchor="middle">Comprador</text>
+
+                        <rect x="550" y="150" width="100" height="60" rx="8" fill="#fff" stroke="#2a4939" stroke-width="2"/>
+                        <text x="600" y="185" font-size="14" font-weight="bold" fill="#2a4939" text-anchor="middle">Vendedor</text>
+
+                        <path d="M 220 100 L 220 280 M 480 100 L 480 280" fill="none" stroke="#ddd" stroke-width="2" stroke-dasharray="10,5"/>
+                        <rect x="230" y="140" width="240" height="80" rx="4" fill="rgba(107,76,53,0.1)" stroke="none"/>
+                        <text x="350" y="170" font-size="13" font-weight="bold" fill="#6b4c35" text-anchor="middle">ABISMO DE INCERTIDUMBRE</text>
+                        <text x="350" y="190" font-size="11" fill="#4a3828" text-anchor="middle">(Asimetría de info, riesgo de fraude)</text>
+
+                        <path d="M 150 90 Q 350 40 550 90" fill="none" stroke="#2c3e50" stroke-width="4"/>
+                        <rect x="250" y="25" width="200" height="40" rx="20" fill="#2c3e50" stroke="none"/>
+                        <text x="350" y="50" font-size="13" font-weight="bold" fill="#fff" text-anchor="middle">MARCO INSTITUCIONAL</text>
+
+                        <line x1="280" y1="65" x2="280" y2="140" stroke="#2c3e50" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowDark)"/>
+                        <text x="250" y="100" font-size="11" font-weight="bold" fill="#2c3e50" transform="rotate(-90 270,100)">Contratos Claros</text>
+
+                        <line x1="420" y1="65" x2="420" y2="140" stroke="#2c3e50" stroke-width="2" stroke-dasharray="4,4" marker-end="url(#arrowDark)"/>
+                        <text x="390" y="100" font-size="11" font-weight="bold" fill="#2c3e50" transform="rotate(-90 410,100)">Tribunales Eficientes</text>
+
+                        <text x="350" y="260" font-size="12" fill="#666" font-style="italic" text-anchor="middle">Sin el puente institucional, el riesgo es tan alto que la transacción se cancela.</text>
+                    </svg>
+                </div>
+                </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo tipo-analisis">✍️ Taller de Análisis</span>
+            <h2>La Paradoja de la Informalidad</h2>
+            <div class="contenido-texto">
+                <p>Crucemos la teoría institucional con la realidad estructural de las economías en desarrollo.</p>
+                
+                <div class="caja-analisis">
+                    <strong>Ejercicio Analítico: El Tianguis vs. El Estado</strong>
+                    Un emprendedor quiere abrir un negocio. Las *reglas formales* (trámites burocráticos, impuestos complejos, extorsión de inspectores) le imponen **costos de transacción ex-ante altísimos**. Como respuesta racional, decide operar en la informalidad (un tianguis). Ahí operan *reglas informales*: paga una cuota al líder de comerciantes, quien a cambio le garantiza un espacio y seguridad (cumplimiento de contratos exprés).<br><br>
+                    <strong>Pregunta de Reflexión:</strong><br>
+                    Desde la perspectiva de Ayala y North, la informalidad y la corrupción no son "falta de cultura", sino una <em>solución institucional subóptima</em>. ¿Por qué se dice que estas redes informales, aunque resuelven el costo de transacción inmediato para el individuo, condenan a la macroeconomía al subdesarrollo a largo plazo?
+                </div>
+
+                <details style="background: #f0f7f4; padding: 15px; border-radius: 6px; border: 1px solid var(--pizarra-institucional); cursor: pointer;">
+                    <summary style="font-weight: bold; color: var(--pizarra-institucional);">Reflexión Crítica (Cruce Estructural)</summary>
+                    <p style="margin-top: 10px; font-size: 0.95rem;">Las instituciones informales (redes de confianza o sobornos) son efectivas a pequeña escala, pero no escalan. No puedes pedir un crédito bancario de 1 millón de dólares respaldado por "la palabra del líder del tianguis". Al carecer de derechos de propiedad impersonales y universales (formalidad), el capital no se puede apalancar, la innovación se estanca y la acumulación capitalista (recordando a Marx) queda truncada en su fase mercantil básica.</p>
+                </details>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo tipo-recursos">📚 Recursos y Glosario</span>
+            <h2>Bibliografía y Audiovisuales</h2>
+            <div class="contenido-texto">
+                <p><strong>Lecturas Obligatorias:</strong></p>
+                <div class="recursos-grid">
+                    <div class="recurso-item">Ayala, J. (1999). <em>Instituciones y Economía. Una introducción al Neoinstitucionalismo económico.</em> FCE. (Capítulos I, III y IV).</div>
+                    <div class="recurso-item">North, D. (1990). <em>Instituciones, cambio institucional y desempeño económico.</em> FCE. (Recomendado complementario).</div>
+                </div>
+
+                <p><strong>Glosario Técnico:</strong></p>
+                <ul>
+                    <li><strong>Instituciones:</strong> Reglas, normas y restricciones formales e informales que estructuran la interacción humana.</li>
+                    <li><strong>Costos de Transacción:</strong> Costos derivados de medir lo que se intercambia, y de proteger y hacer cumplir los derechos de propiedad y los contratos.</li>
+                    <li><strong>Asimetría de la Información:</strong> Situación en la que una de las partes de una transacción posee información material relevante que la otra parte ignora, generando riesgo moral o selección adversa.</li>
+                </ul>
+
+                <p><strong>Cátedra en Video:</strong></p>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube-nocookie.com/embed/5aLh7tL7o78" title="Douglass North y el Neoinstitucionalismo" allowfullscreen loading="lazy"></iframe>
+                </div>
+                <p style="font-size: 0.8rem; color: var(--cafe-claro); font-style: italic;">Mini-documental y análisis sobre las aportaciones de Douglass North. Si no carga, puedes buscar seminarios académicos en YouTube sobre "Costos de Transacción y Douglass North".</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <div class="slide-cierre">
+                <span class="cierre-emoji">🏛️</span>
+                <h2 class="cierre-titulo">¡Módulo V Completado!</h2>
+                <p style="color: var(--texto-suave); font-size: 1.05rem; max-width: 600px; margin: 0 auto;">
+                    Has comprendido que el mercado no existe en el vacío. Los altos costos de transacción y la incertidumbre pueden asfixiar el intercambio comercial. Las instituciones son la tecnología social que la humanidad ha creado para lidiar con nuestra racionalidad limitada y nuestra tendencia al oportunismo. En el siguiente y último módulo, analizaremos cómo el diseño de los Derechos de Propiedad define la riqueza o la pobreza de las naciones.
+                </p>
+                <button class="btn-completar" id="btnCompletarM5">Guardar Progreso del Módulo V</button>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-nav" id="prevBtn" onclick="changeSlide(-1)">← Anterior</button>
+            <div class="puntos-nav" id="puntos"></div>
+            <button class="btn-nav" id="nextBtn" onclick="changeSlide(1)">Siguiente →</button>
+        </div>
+    </div>
+    
+    <div class="modulo-nav">
+        <a href="ce_m4.html" class="btn-modulo">← Módulo IV</a>
+        <a href="ce_inicio.html" class="btn-modulo">↑ Índice</a>
+        <a href="ce_m6.html" class="btn-modulo">Siguiente: Módulo VI →</a>
+    </div>
+</div>
+</main>
+
+<script>
+// Menú
+function toggleMenu() {
+    const btn=document.getElementById('menuBtn'),panel=document.getElementById('menuPanel'),overlay=document.getElementById('menuOverlay'),abierto=panel.classList.contains('abierto');
+    btn.classList.toggle('abierto',!abierto); panel.classList.toggle('abierto',!abierto); overlay.classList.toggle('visible',!abierto);
+    panel.setAttribute('aria-hidden',abierto?'true':'false'); document.body.style.overflow=abierto?'':'hidden';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){const p=document.getElementById('menuPanel');if(p.classList.contains('abierto'))toggleMenu();}});
+
+// Slides
+let currentSlide=0;
+const slides=document.querySelectorAll('.slide'),counter=document.getElementById('slideCounter'),prevBtn=document.getElementById('prevBtn'),nextBtn=document.getElementById('nextBtn'),progress=document.getElementById('progressBar'),puntosContainer=document.getElementById('puntos');
+slides.forEach((_,i)=>{const btn=document.createElement('button');btn.classList.add('punto');if(i===0)btn.classList.add('activo');btn.addEventListener('click',()=>goToSlide(i));puntosContainer.appendChild(btn);});
+function updateUI(){const t=slides.length;counter.innerText=`${currentSlide+1} / ${t}`;prevBtn.disabled=currentSlide===0;nextBtn.disabled=currentSlide===t-1;progress.style.width=`${((currentSlide+1)/t)*100}%`;document.querySelectorAll('.punto').forEach((p,i)=>p.classList.toggle('activo',i===currentSlide));}
+function goToSlide(n){slides[currentSlide].classList.remove('active');currentSlide=n;slides[currentSlide].classList.add('active');updateUI();}
+function changeSlide(n){goToSlide(currentSlide+n);}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'&&currentSlide<slides.length-1)changeSlide(1);if(e.key==='ArrowLeft'&&currentSlide>0)changeSlide(-1);});
+updateUI();
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA5YZCAHcrMA36PmgpOxmHnTOI6zgZNMgg",
+        authDomain: "cpee-plataforma-a655a.firebaseapp.com",
+        projectId: "cpee-plataforma-a655a",
+        storageBucket: "cpee-plataforma-a655a.firebasestorage.app",
+        messagingSenderId: "684415102099",
+        appId: "1:684415102099:web:3f2b649a34386677a87166"
+    };
+
+    const app  = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db   = getFirestore(app);
+    const btnCompletar = document.getElementById("btnCompletarM5");
+
+    function marcarCompletado() {
+        if (btnCompletar) {
+            btnCompletar.innerHTML = "✅ Progreso Guardado";
+            btnCompletar.style.background = "var(--cafe-claro)";
+            btnCompletar.disabled = true;
+            btnCompletar.style.cursor = "default";
+        }
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) {
+            window.location.href = "../../login.html";
+            return;
+        }
+        const docRef  = doc(db, "progreso_usuarios", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (!docSnap.exists() || docSnap.data().acceso_ce !== true) {
+            window.location.href = "ce_inicio.html";
+            return;
+        }
+
+        if (docSnap.data().modulo5_ce_completado === true) {
+            marcarCompletado();
+        }
+
+        if (btnCompletar) {
+            btnCompletar.addEventListener("click", async () => {
+                btnCompletar.innerText = "Registrando...";
+                try {
+                    await setDoc(docRef, {
+                        modulo5_ce_completado: true,
+                        fecha_completado_ce_m5: new Date()
+                    }, { merge: true });
+                    marcarCompletado();
+                } catch (error) {
+                    console.error("Error al guardar: ", error);
+                    alert("Error de red. Intenta de nuevo.");
+                    btnCompletar.innerText = "Guardar Progreso del Módulo V";
+                }
+            });
+        }
+    });
+</script>
+</body>
+</html>
