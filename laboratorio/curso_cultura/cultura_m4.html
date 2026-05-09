@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo IV: Cultura, Poder e Historia — CPEE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
+<style>
+/* PALETA ARTE Y CULTURA */
+:root {
+    --crema: #fff1da;
+    --vino-cultura: #6a2c46; 
+    --vino-claro: #8a415d;
+    --cafe: #2B1B12;
+    --cafe-claro: #6b4c35;
+    --naranja: #d35a34;
+    --negro: #111111;
+    --texto-suave: #4a3828;
+    --fondo-tarjeta: #fdfaf6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background-color: var(--crema); color: var(--negro); font-family: 'DM Sans', sans-serif; line-height: 1.7; overflow-x: hidden; }
+
+/* MENU */
+.menu-trigger { position: fixed; top: 22px; left: 24px; z-index: 1100; background: var(--cafe); border: none; border-radius: 8px; width: 44px; height: 44px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; transition: background 0.2s; }
+.menu-trigger:hover { background: var(--vino-cultura); }
+.menu-trigger span { display: block; width: 20px; height: 2px; background: var(--crema); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease; transform-origin: center; }
+.menu-trigger.abierto span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-trigger.abierto span:nth-child(2) { opacity: 0; width: 0; }
+.menu-trigger.abierto span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.menu-overlay { position: fixed; inset: 0; background: rgba(43,27,18,0.45); backdrop-filter: blur(3px); opacity: 0; pointer-events: none; z-index: 1050; transition: opacity 0.3s ease; }
+.menu-overlay.visible { opacity: 1; pointer-events: all; }
+.menu-panel { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: var(--cafe); z-index: 1090; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.22,1,0.36,1); display: flex; flex-direction: column; padding: 80px 0 40px; }
+.menu-panel.abierto { transform: translateX(0); }
+.menu-panel-logo { padding: 0 28px 32px; border-bottom: 1px solid rgba(215,196,165,0.2); margin-bottom: 12px; }
+.menu-panel-logo span { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: #D7C4A5; line-height: 1.3; display: block; }
+.menu-panel nav a { display: flex; align-items: center; gap: 12px; padding: 13px 28px; color: #D7C4A5; text-decoration: none; font-size: 0.95rem; font-weight: 400; border-left: 3px solid transparent; transition: background 0.2s, border-color 0.2s, color 0.2s; }
+.menu-panel nav a:hover { background: rgba(215,196,165,0.07); border-left-color: var(--vino-cultura); color: #f0dfc0; }
+
+/* BREADCRUMB */
+.breadcrumb { padding: 18px 48px 18px 90px; display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--cafe-claro); opacity: 0.7; border-bottom: 1px solid rgba(43,27,18,0.08); flex-wrap: wrap; }
+.breadcrumb a { color: inherit; text-decoration: none; }
+.breadcrumb a:hover { color: var(--vino-cultura); }
+.breadcrumb .actual { color: var(--vino-cultura); opacity: 1; }
+
+/* PROGRESS BAR */
+.progress-container { width: 100%; height: 4px; background: rgba(106,44,70,0.1); position: sticky; top: 0; z-index: 1000; }
+#progress-fill { height: 100%; width: 0%; background: var(--vino-cultura); transition: width 0.3s ease; }
+
+/* HEADER */
+header { position: relative; padding: 48px 48px 40px; border-bottom: 1px solid rgba(43,27,18,0.15); overflow: hidden; }
+.header-inner { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.header-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--vino-cultura); margin-bottom: 12px; }
+header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(1.7rem, 3.5vw, 2.5rem); color: var(--cafe); line-height: 1.2; }
+.modulo-badge { background: rgba(106,44,70,0.08); border: 1px solid rgba(106,44,70,0.15); border-radius: 10px; padding: 14px 20px; text-align: center; }
+.modulo-badge .num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--vino-cultura); line-height: 1; display: block; }
+
+/* SLIDE CONTAINER */
+main { max-width: 820px; margin: 0 auto; padding: 48px 48px 80px; }
+.slide-container { background: white; border: 1px solid rgba(43,27,18,0.1); border-radius: 12px; padding: 40px; min-height: 550px; position: relative; box-shadow: 0 4px 20px rgba(43,27,18,0.06); display: flex; flex-direction: column; }
+.slide { display: none; animation: fadeIn 0.4s ease; flex: 1; }
+.slide.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* COMPONENTES DE CONTENIDO */
+.slide-tipo { display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; margin-bottom: 15px; background: rgba(106,44,70,0.1); color: var(--vino-cultura); }
+.slide h2 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--cafe); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+.contenido-texto { font-size: 0.95rem; color: var(--texto-suave); line-height: 1.8; }
+.contenido-texto p { margin-bottom: 15px; }
+.contenido-texto ul, .contenido-texto ol { padding-left: 20px; margin: 15px 0; }
+.contenido-texto li { margin-bottom: 10px; }
+.caja-resaltada { background: #fdfaf6; border-left: 4px solid var(--vino-cultura); padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+.caja-resaltada strong { color: var(--vino-cultura); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.75rem; }
+.caja-analisis { background: rgba(215,196,165,0.15); border: 1px solid rgba(43,27,18,0.1); border-left: 4px solid var(--cafe); padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+.caja-analisis strong { color: var(--cafe); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
+
+/* RECURSOS */
+.caja-video { background: #f9f6f7; border: 1px solid #efe3e8; border-radius: 8px; padding: 20px; margin: 20px 0; display: flex; align-items: flex-start; gap: 15px; }
+.caja-video-icono { font-size: 2rem; line-height: 1; }
+.video-link-directo { display: inline-block; background: var(--vino-cultura); color: white; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; transition: 0.3s; margin-top: 10px; }
+.video-link-directo:hover { background: var(--vino-oscuro); transform: translateY(-2px); }
+
+/* NAV BUTTONS */
+.nav-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+.btn-nav { padding: 10px 20px; background: var(--cafe); color: #D7C4A5; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+.btn-nav:hover:not(:disabled) { background: var(--vino-cultura); }
+.btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.btn-completar { width: 100%; padding: 16px; background: var(--vino-cultura); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+.btn-completar:hover:not(:disabled) { background: var(--vino-oscuro); }
+.btn-completar:disabled { background: #ccc; cursor: not-allowed; }
+</style>
+</head>
+<body>
+
+<div class="progress-container"><div id="progress-fill"></div></div>
+
+<button class="menu-trigger" id="menuBtn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+<div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+<aside class="menu-panel" id="menuPanel">
+    <div class="menu-panel-logo"><span>Centro Popular de<br>Estudios Económicos</span></div>
+    <nav>
+        <a href="../../index.html">Inicio</a>
+        <a href="../laboratorio/lab.html">Laboratorio</a>
+        <a href="cultura_inicio.html">Índice del Curso</a>
+    </nav>
+</aside>
+
+<div class="breadcrumb">
+    <a href="../laboratorio/lab.html">Laboratorio</a><span style="margin:0 8px">/</span>
+    <a href="cultura_inicio.html">Arte y Cultura</a><span style="margin:0 8px">/</span>
+    <span class="actual">Módulo IV</span>
+</div>
+
+<header>
+    <div class="header-inner">
+        <div class="header-texto">
+            <p class="header-eyebrow">El Campo de Batalla</p>
+            <h1>Cultura, Poder e Historia</h1>
+        </div>
+        <div class="modulo-badge"><span class="num">IV</span></div>
+    </div>
+</header>
+
+<main>
+    <div class="slide-container" id="slide-container">
+        
+        <div class="slide active">
+            <span class="slide-tipo">🎯 Introducción</span>
+            <h2>El arte no es inocente</h2>
+            <div class="contenido-texto">
+                <p>Ningún sistema de dominación en la historia de la humanidad se ha sostenido exclusivamente a través de la violencia física. Las balas, las prisiones y los ejércitos son extremadamente costosos de mantener.</p>
+                <p>Para que un orden social desigual funcione de manera estable, necesita que quienes están en la parte baja de la pirámide consideren que su situación es "natural", "justa" o "inevitable". Es aquí donde la cultura deja de ser un entretenimiento para convertirse en el pilar fundamental del poder material e institucional.</p>
+                <div class="caja-resaltada">
+                    <strong>Objetivos de este módulo:</strong>
+                    <ul>
+                        <li>Desarmar el concepto de Hegemonía Cultural de Antonio Gramsci.</li>
+                        <li>Entender la Violencia Simbólica y cómo se utiliza para perpetuar la desigualdad.</li>
+                        <li>Analizar cómo la memoria histórica y los monumentos son herramientas de disputa política.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">📖 Teoría Crítica</span>
+            <h2>La Hegemonía según Gramsci</h2>
+            <div class="contenido-texto">
+                <p>El filósofo marxista italiano <strong>Antonio Gramsci</strong> revolucionó la teoría política al explicar por qué las revoluciones no ocurrían matemáticamente cuando la pobreza aumentaba. Su respuesta fue la <strong>Hegemonía Cultural</strong>.</p>
+                <p>La hegemonía es el proceso mediante el cual la clase dominante impone su propia visión del mundo, sus valores y sus normas sociales sobre las clases subordinadas, de tal forma que estas las aceptan como <em>verdades universales</em>.</p>
+                <p>El mayor triunfo de la hegemonía es lograr la dominación <strong>por consentimiento</strong>. Cuando el oprimido defiende el sistema que lo oprime porque cree genuinamente que es "lo correcto", el poder ya no necesita usar la fuerza bruta.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🧠 Ideología Invisible</span>
+            <h2>La trampa del "Sentido Común"</h2>
+            <div class="contenido-texto">
+                <p>La hegemonía no se presenta como un discurso político agresivo; se disfraza de <strong>"sentido común"</strong>.</p>
+                <p>Pensemos en la idea de la <em>meritocracia</em>. La cultura popular (películas, libros de autoayuda, discursos empresariales) nos bombardea con la narrativa de que "el pobre es pobre porque quiere" y que "el éxito es fruto exclusivo del esfuerzo individual".</p>
+                <p>Al convertir esta narrativa en sentido común, la cultura exime a la estructura económica de cualquier culpa. Las fallas sistémicas, como la extrema concentración de capital o los bajos salarios estructurales, dejan de ser un problema político para convertirse en una "falla moral individual".</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">⚠️ Mecanismos de Poder</span>
+            <h2>Pierre Bourdieu y la Violencia Simbólica</h2>
+            <div class="contenido-texto">
+                <p>El sociólogo francés <strong>Pierre Bourdieu</strong> profundizó en cómo funciona este mecanismo a través de lo que llamó <strong>Violencia Simbólica</strong>.</p>
+                <p>Es una violencia amortiguada, invisible y silenciosa. Se ejerce cuando se impone el lenguaje, los gustos artísticos y las formas de comportamiento de las clases altas como la <em>única norma válida</em> o de "buen gusto".</p>
+                <div class="caja-analisis">
+                    <strong>El Sistema Educativo:</strong><br>
+                    La escuela no es neutral. Frecuentemente evalúa a los estudiantes no por su inteligencia, sino por su "Capital Cultural" previo (si en su casa hay libros, si saben hablar "correctamente" según la norma elitista). Al reprobar al estudiante de origen popular por no dominar esos códigos, la escuela legitima la desigualdad económica convenciéndolo de que su fracaso fue por "falta de capacidad académica".
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🏙️ Segregación Espacial</span>
+            <h2>Estigmatización en la Periferia</h2>
+            <div class="contenido-texto">
+                <p>El poder y la cultura también se escriben en el territorio. En los grandes centros urbanos, existe una clara división entre el centro (concentración de riqueza y servicios) y la periferia.</p>
+                <p>Pero esta segregación económica necesita una justificación cultural. A través de los medios masivos, se construye la figura del "marginado peligroso". Se estigmatizan sus formas de hablar, su vestimenta y sus expresiones artísticas (como ciertos géneros musicales urbanos), tachándolos de "baja cultura".</p>
+                <p>Esta estigmatización cultural facilita la represión policial y justifica el abandono institucional en zonas periféricas, ya que la sociedad asume que esas áreas "no tienen arreglo".</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">📺 Medios Masivos</span>
+            <h2>La Sociedad del Espectáculo</h2>
+            <div class="contenido-texto">
+                <p>En 1967, <strong>Guy Debord</strong> advirtió sobre la mutación final de este sistema. Afirmó que <em>"todo lo que antes se vivía directamente, se ha alejado en una representación"</em>.</p>
+                <p>La propaganda moderna no se basa en carteles de dictadores con cara de enojo. Se basa en el entretenimiento constante, el consumo de <em>lifestyles</em> inalcanzables en Instagram y la reducción del debate político a un simple "show" televisivo.</p>
+                <p>El espectáculo distrae a la población de las contradicciones materiales de su existencia, pacificando la crítica social mediante la saturación de imágenes.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🏛️ Historia Oficial</span>
+            <h2>¿Quién escribe el pasado?</h2>
+            <div class="contenido-texto">
+                <p>La historia no es el registro objetivo del pasado; es el relato escrito por quienes ganaron los conflictos. <strong>Controlar la memoria colectiva es controlar el futuro político.</strong></p>
+                <p>Observa el espacio público: los nombres de las avenidas principales, los monumentos en las plazas, las fechas que se celebran como feriados nacionales. Todo esto es una selección cultural diseñada para enaltecer ciertas figuras (generalmente militares o élites fundadoras) y borrar de la historia oficial las huelgas, masacres o luchas populares.</p>
+                <p>Derribar o reescribir un monumento no es "vandalismo ciego", es una disputa cultural legítima por el control de la memoria histórica.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">✊ Resistencia</span>
+            <h2>La Contrahegemonía</h2>
+            <div class="contenido-texto">
+                <p>Si la cultura es el arma del poder, también es la herramienta de la emancipación. Gramsci planteaba que para cambiar el sistema económico, primero hay que construir una <strong>Contrahegemonía</strong> cultural.</p>
+                <p>Esto significa crear nuevos sentidos comunes, nuevas narrativas, arte disidente y espacios educativos independientes que disputen la legitimidad de las ideas dominantes.</p>
+                <p>Una canción de protesta que se viraliza en la periferia, un documental independiente o un centro de estudios populares que desafía las currículas ortodoxas son, en esencia, actos de guerra de posiciones culturales.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">📝 Taller Práctico</span>
+            <h2>Diseccionando el sentido común</h2>
+            <div class="contenido-texto">
+                <p>Aplica el análisis de violencia simbólica y hegemonía a la siguiente situación estructural:</p>
+                <div class="caja-resaltada" style="background:#fffbe6; border-color:var(--naranja);">
+                    <strong>El caso del "Emprendedor Exitoso" en Medios:</strong><br>
+                    En la televisión y plataformas digitales de tu país, constantemente se difunden programas o series sobre "Tiburones" financieros o millonarios excéntricos que aseguran haber construido su imperio trabajando 18 horas al día desde un garaje, omitiendo el capital social o heredado que poseían.<br><br>
+                    1. Según Gramsci, ¿por qué esta narrativa es útil para mantener la estabilidad del sistema económico actual?<br>
+                    2. ¿Cómo funciona esto como "violencia simbólica" para un obrero que trabaja 12 horas diarias y no logra salir de la pobreza?<br>
+                    3. ¿Qué narrativa "contrahegemónica" podrías diseñar para desarmar este mito?
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🎥 Recursos</span>
+            <h2>Material de Profundización</h2>
+            <div class="contenido-texto">
+                <p>Para dominar estos conceptos clave, revisa el siguiente material analítico:</p>
+                
+                <div class="caja-video">
+                    <div class="caja-video-icono">📕</div>
+                    <div class="caja-video-contenido">
+                        <h4>Antonio Gramsci y la Hegemonía Cultural</h4>
+                        <p>Una explicación clara de cómo el filósofo sardo entendió que el control de las ideas es más poderoso que el control policial.</p>
+                        <a href="https://www.youtube.com/watch?v=4lT83T8J0Dk" target="_blank" class="video-link-directo">Ver en YouTube →</a>
+                    </div>
+                </div>
+
+                <div class="caja-video">
+                    <div class="caja-video-icono">🎓</div>
+                    <div class="caja-video-contenido">
+                        <h4>Pierre Bourdieu: Violencia Simbólica y Educación</h4>
+                        <p>Análisis de cómo las escuelas y universidades reproducen la desigualdad social disfrazándola de meritocracia académica.</p>
+                        <a href="https://www.youtube.com/watch?v=R9E-W-u3uYw" target="_blank" class="video-link-directo">Ver en YouTube →</a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🏁 Conclusión</span>
+            <h2>¡Módulo IV Completado!</h2>
+            <div class="contenido-texto">
+                <p>En este módulo logramos deconstruir el aparato cultural del poder. Ahora sabes que el "sentido común" rara vez es neutral; casi siempre es la ideología de quienes dirigen el sistema, disfrazada de verdad universal.</p>
+                <p>En el <strong>Módulo V y final</strong>, uniremos toda esta teoría para analizar la <strong>Cultura contemporánea y su futuro</strong>: consumo, globalización y cómo el mercado devora incluso a la propia rebeldía.</p>
+                <button class="btn-completar" id="btnCompletarM4">Guardar progreso y terminar Módulo IV</button>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-nav" id="prevBtn" onclick="moveSlide(-1)">Anterior</button>
+            <span id="slideCounter" style="font-size:0.8rem; font-weight:bold; color:var(--vino-cultura)">1 / 11</span>
+            <button class="btn-nav" id="nextBtn" onclick="moveSlide(1)">Siguiente</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const counter = document.getElementById('slideCounter');
+    const progressFill = document.getElementById('progress-fill');
+
+    function updateProgress() {
+        const percent = ((currentSlide + 1) / slides.length) * 100;
+        progressFill.style.width = percent + '%';
+    }
+
+    function moveSlide(step) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide += step;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+        
+        slides[currentSlide].classList.add('active');
+        
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === slides.length - 1;
+        counter.innerText = `${currentSlide + 1} / ${slides.length}`;
+        updateProgress();
+    }
+
+    // Navegación por teclado
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "ArrowRight" && currentSlide < slides.length - 1) {
+            moveSlide(1);
+        } else if (e.key === "ArrowLeft" && currentSlide > 0) {
+            moveSlide(-1);
+        }
+    });
+
+    function toggleMenu() {
+        const panel = document.getElementById('menuPanel');
+        const overlay = document.getElementById('menuOverlay');
+        const trigger = document.getElementById('menuBtn');
+        panel.classList.toggle('abierto');
+        overlay.classList.toggle('visible');
+        trigger.classList.toggle('abierto');
+    }
+
+    updateProgress();
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA5YZCAHcrMA36PmgpOxmHnTOI6zgZNMgg",
+        authDomain: "cpee-plataforma-a655a.firebaseapp.com",
+        projectId: "cpee-plataforma-a655a",
+        storageBucket: "cpee-plataforma-a655a.firebasestorage.app",
+        messagingSenderId: "684415102099",
+        appId: "1:684415102099:web:3f2b649a34386677a87166"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const btnCompletar = document.getElementById("btnCompletarM4");
+
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) { window.location.href = "../../login.html"; return; }
+        
+        const docRef = doc(db, "progreso_usuarios", user.uid);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists() && docSnap.data().modulo4_cultura_completado) {
+            btnCompletar.innerText = "✅ Módulo Completado";
+            btnCompletar.disabled = true;
+        }
+
+        btnCompletar.addEventListener("click", async () => {
+            btnCompletar.innerText = "Guardando...";
+            await setDoc(docRef, {
+                modulo4_cultura_completado: true,
+                fecha_m4_cultura: new Date()
+            }, { merge: true });
+            btnCompletar.innerText = "✅ ¡Progreso Guardado!";
+            btnCompletar.disabled = true;
+        });
+    });
+</script>
+</body>
+</html>

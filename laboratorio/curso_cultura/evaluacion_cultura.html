@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación: Arte y Cultura - CPEE</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --cafe: #2B1B12;
+            --vino-cultura: #6a2c46; 
+            --vino-oscuro: #4d1e31;
+            --crema: #fff1da;
+            --naranja: #d35a34;
+            --texto-suave: #4a3828;
+            --fondo-tarjeta: #fdfaf6;
+        }
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background-color: var(--crema);
+            color: var(--cafe);
+            margin: 0;
+            padding: 40px 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+        }
+        h1 {
+            font-family: 'DM Serif Display', serif;
+            color: var(--vino-cultura);
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+        .instrucciones {
+            text-align: center;
+            color: var(--texto-suave);
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--crema);
+        }
+        .pregunta-card {
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #fafafa;
+            border-left: 4px solid var(--vino-cultura);
+            border-radius: 4px;
+        }
+        .pregunta-texto {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .opciones label {
+            display: block;
+            margin-bottom: 10px;
+            padding: 12px 15px;
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            line-height: 1.5;
+        }
+        .opciones label:hover {
+            border-color: var(--vino-cultura);
+            background: #fdfaf6;
+        }
+        .opciones input[type="radio"] {
+            margin-right: 10px;
+            accent-color: var(--vino-cultura);
+        }
+        .btn-enviar {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: var(--vino-cultura);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 40px;
+            transition: background 0.3s;
+        }
+        .btn-enviar:hover {
+            background: var(--vino-oscuro);
+        }
+        .btn-enviar:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        /* Pantalla de bloqueo */
+        #pantalla-bloqueo {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--crema);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            text-align: center;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="pantalla-bloqueo">
+        <h2 id="bloqueo-texto" style="font-family: 'DM Serif Display', serif; color: var(--cafe); font-size: 2rem;">Verificando credenciales...</h2>
+        <p id="bloqueo-subtexto">Analizando tu progreso en el curso de Cultura.</p>
+        <button id="btn-volver" style="display:none; margin-top: 20px; padding: 10px 20px; background: var(--vino-cultura); color: white; border: none; border-radius: 5px; cursor: pointer;" onclick="window.location.href='cultura_inicio.html'">Volver al Inicio</button>
+    </div>
+
+    <div class="container" id="contenedor-examen" style="display: none;">
+        <h1>Evaluación de Análisis Cultural</h1>
+        <div class="instrucciones">
+            <p>Demuestra tu capacidad para decodificar la matriz cultural. Tienes un máximo de <strong>3 intentos</strong> para aprobar. <br>Necesitas al menos <strong>12 aciertos (8.0)</strong> para obtener tu constancia.</p>
+            <p style="color: var(--naranja); font-weight: bold;" id="intentos-restantes-texto"></p>
+        </div>
+
+        <form id="formulario-evaluacion">
+            
+            <div class="pregunta-card">
+                <div class="pregunta-texto">1. ¿Qué diferencia fundamental existe entre la "cultura popular" y la "cultura de masas"?</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q1" value="A" required> A) La popular nace de vivencias comunitarias; la de masas es producida industrialmente para el consumo pasivo.</label>
+                    <label><input type="radio" name="q1" value="B"> B) Ambas son exactamente lo mismo, solo cambia la época en la que surgieron.</label>
+                    <label><input type="radio" name="q1" value="C"> C) La cultura popular solo se encuentra en los museos, mientras que la de masas está en internet.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">2. Según Pierre Bourdieu, el concepto de "Habitus" sirve para explicar por qué...</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q2" value="A" required> A) Todos los seres humanos nacen con exactamente los mismos gustos.</label>
+                    <label><input type="radio" name="q2" value="B"> B) Nuestros gustos, forma de hablar y comportamientos están condicionados por nuestra clase social y entorno, aunque nos parezcan "naturales".</label>
+                    <label><input type="radio" name="q2" value="C"> C) La gente decide racionalmente su identidad todos los días al despertar.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">3. Desde la antropología crítica moderna, la cultura NO se entiende como "tener mucha educación", sino como...</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q3" value="A" required> A) El sistema de significados, símbolos y prácticas que usamos para interpretar la realidad cotidiana.</label>
+                    <label><input type="radio" name="q3" value="B"> B) Exclusivamente las bellas artes (pintura clásica, ópera, ballet).</label>
+                    <label><input type="radio" name="q3" value="C"> C) La cantidad de libros leídos por habitante en un país.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">4. La afirmación de John Berger "nunca miramos solo una cosa; siempre miramos la relación entre las cosas y nosotros" implica que:</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q4" value="A" required> A) Las obras de arte tienen un mensaje único y literal que no cambia jamás.</label>
+                    <label><input type="radio" name="q4" value="B"> B) La visión es un proceso biológico que no tiene relación con la sociedad.</label>
+                    <label><input type="radio" name="q4" value="C"> C) La percepción visual siempre está condicionada por el contexto histórico, social y las creencias del observador.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">5. En el análisis semiótico de una imagen publicitaria, ¿qué representa el "significante"?</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q5" value="A" required> A) El concepto abstracto que se vende (ej. "el éxito" o "la felicidad").</label>
+                    <label><input type="radio" name="q5" value="B"> B) Los elementos físicos observables (colores, personas literales, objetos en la imagen).</label>
+                    <label><input type="radio" name="q5" value="C"> C) El precio del producto anunciado.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">6. Cuando decimos que el arte es "el espejo de su época", nos referimos a que el arte producido durante un periodo histórico determinado...</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q6" value="A" required> A) Refleja las tensiones, valores y dinámicas de poder de la sociedad que lo financia y lo crea.</label>
+                    <label><input type="radio" name="q6" value="B"> B) Se hace exclusivamente para decorar edificios gubernamentales.</label>
+                    <label><input type="radio" name="q6" value="C"> C) Siempre es una crítica destructiva contra el sistema imperante.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">7. ¿Qué quiso decir Marshall McLuhan con su famosa frase "el medio es el mensaje"?</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q7" value="A" required> A) Que la tecnología utilizada para comunicarse (como la TV o el celular) altera la estructura del pensamiento y la sociedad de forma más profunda que el contenido que transmite.</label>
+                    <label><input type="radio" name="q7" value="B"> B) Que lo único importante es la calidad de los programas que vemos en televisión.</label>
+                    <label><input type="radio" name="q7" value="C"> C) Que los medios de comunicación nunca dicen mentiras.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">8. Según Byung-Chul Han, en la actual "Sociedad del Cansancio"...</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q8" value="A" required> A) El estado obliga a los ciudadanos a trabajar mediante amenazas físicas.</label>
+                    <label><input type="radio" name="q8" value="B"> B) Los individuos se autoexplotan voluntariamente bajo la ilusión de la realización personal, el rendimiento y la positividad constante.</label>
+                    <label><input type="radio" name="q8" value="C"> C) Nadie trabaja porque las máquinas hacen todo.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">9. El "filtro burbuja" generado por los algoritmos en redes sociales tiene como principal consecuencia sociocultural:</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q9" value="A" required> A) La fragmentación de la realidad compartida, aislando a los usuarios en cámaras de eco que solo confirman sus prejuicios previos.</label>
+                    <label><input type="radio" name="q9" value="B"> B) El aumento de la empatía global al forzarnos a ver opiniones contrarias.</label>
+                    <label><input type="radio" name="q9" value="C"> C) La democratización perfecta y neutral del acceso a la información mundial.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">10. Para Antonio Gramsci, la "Hegemonía Cultural" es un triunfo del poder porque logra la dominación cuando...</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q10" value="A" required> A) Las clases subordinadas aceptan la visión del mundo y los valores de los dominantes asumiéndolos como "sentido común" o verdades naturales.</label>
+                    <label><input type="radio" name="q10" value="B"> B) El gobierno prohíbe legalmente cualquier otra forma de pensamiento mediante censura militar.</label>
+                    <label><input type="radio" name="q10" value="C"> C) Las clases altas deciden repartir su riqueza por voluntad propia.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">11. Un ejemplo clásico de "Violencia Simbólica" en el sistema educativo sería:</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q11" value="A" required> A) Aplicar castigos corporales a los estudiantes rebeldes.</label>
+                    <label><input type="radio" name="q11" value="B"> B) Evaluar y reprobar a un estudiante de clase trabajadora por no dominar el lenguaje o los códigos de la élite, convenciéndolo de que su fracaso se debe a su "falta de inteligencia".</label>
+                    <label><input type="radio" name="q11" value="C"> C) Obligar a los alumnos a usar un uniforme de color específico.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">12. El concepto de "Sociedad del Espectáculo" de Guy Debord sugiere que en el capitalismo avanzado:</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q12" value="A" required> A) Las experiencias vividas directamente han sido reemplazadas por su representación (imágenes, shows), distrayendo y pacificando la crítica social real.</label>
+                    <label><input type="radio" name="q12" value="B"> B) Todas las personas deberían ir más seguido al teatro y al cine.</label>
+                    <label><input type="radio" name="q12" value="C"> C) La sociedad ha mejorado gracias a la calidad de los efectos especiales modernos.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">13. El "Realismo Capitalista" de Mark Fisher describe un estado cultural y psicológico contemporáneo donde...</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q13" value="A" required> A) Resulta imposible imaginar, incluso en la ciencia ficción, una alternativa viable y superadora al sistema económico y social actual.</label>
+                    <label><input type="radio" name="q13" value="B"> B) El cine documental graba cómo funcionan las fábricas de forma muy realista.</label>
+                    <label><input type="radio" name="q13" value="C"> C) Los artistas deciden pintar exclusivamente billetes y corporaciones.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">14. Según la idea de "Modernidad Líquida" de Zygmunt Bauman, ¿cómo se construye la identidad en el siglo XXI?</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q14" value="A" required> A) De forma sólida y permanente a lo largo de toda la vida, basada en el oficio o la religión.</label>
+                    <label><input type="radio" name="q14" value="B"> B) De forma inestable y efímera, construyéndose y reconstruyéndose constantemente a través del consumo, las marcas y las micro-tendencias.</label>
+                    <label><input type="radio" name="q14" value="C"> C) La identidad humana ha desaparecido por completo y somos robots.</label>
+                </div>
+            </div>
+
+            <div class="pregunta-card">
+                <div class="pregunta-texto">15. ¿Qué sucede sistemáticamente en la cultura contemporánea cuando un movimiento subversivo o rebelde gana popularidad masiva?</div>
+                <div class="opciones">
+                    <label><input type="radio" name="q15" value="A" required> A) Inevitablemente provoca el colapso financiero de las élites.</label>
+                    <label><input type="radio" name="q15" value="B"> B) Es asimilado por el mercado, despojado de su crítica estructural y convertido en una estética inofensiva o mercancía rentable (ej. la playera del Che Guevara).</label>
+                    <label><input type="radio" name="q15" value="C"> C) Es censurado brutalmente por los gobiernos y borrado de internet para siempre.</label>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-enviar" id="btn-enviar">Terminar Examen y Calificar</button>
+        </form>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyA5YZCAHcrMA36PmgpOxmHnTOI6zgZNMgg",
+            authDomain: "cpee-plataforma-a655a.firebaseapp.com",
+            projectId: "cpee-plataforma-a655a",
+            storageBucket: "cpee-plataforma-a655a.firebasestorage.app",
+            messagingSenderId: "684415102099",
+            appId: "1:684415102099:web:3f2b649a34386677a87166"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        const pantallaBloqueo = document.getElementById('pantalla-bloqueo');
+        const contenedorExamen = document.getElementById('contenedor-examen');
+        const txtBloqueo = document.getElementById('bloqueo-texto');
+        const subTxtBloqueo = document.getElementById('bloqueo-subtexto');
+        const btnVolver = document.getElementById('btn-volver');
+        const txtIntentos = document.getElementById('intentos-restantes-texto');
+        const btnEnviar = document.getElementById('btn-enviar');
+
+        // CLAVE DE RESPUESTAS
+        const respuestasCorrectas = {
+            q1: "A", q2: "B", q3: "A", q4: "C", q5: "B",
+            q6: "A", q7: "A", q8: "B", q9: "A", q10: "A",
+            q11: "B", q12: "A", q13: "A", q14: "B", q15: "B"
+        };
+
+        let userRef;
+        let userData;
+
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) {
+                window.location.href = "../../login.html"; 
+                return;
+            }
+
+            userRef = doc(db, "progreso_usuarios", user.uid);
+            const docSnap = await getDoc(userRef);
+
+            if (!docSnap.exists() || docSnap.data().acceso_cultura !== true) {
+                window.location.href = "cultura_inicio.html";
+                return;
+            }
+
+            userData = docSnap.data();
+
+            // 1. Ya aprobó antes
+            if (userData.examen_cultura_aprobado === true) {
+                txtBloqueo.innerText = "¡Ya aprobaste la evaluación!";
+                txtBloqueo.style.color = "var(--vino-cultura)";
+                subTxtBloqueo.innerText = "Tu constancia está lista para ser generada.";
+                btnVolver.innerText = "Ir a solicitar mi Constancia";
+                btnVolver.onclick = () => window.location.href = "constancia_cultura.html";
+                btnVolver.style.display = "inline-block";
+                return;
+            }
+
+            // 2. Verificar que los 5 módulos de cultura estén completos
+            const modulosRequeridos = [
+                'modulo1_cultura_completado', 'modulo2_cultura_completado', 
+                'modulo3_cultura_completado', 'modulo4_cultura_completado', 
+                'modulo5_cultura_completado'
+            ];
+            
+            let faltaModulo = false;
+            for (let mod of modulosRequeridos) {
+                if (!userData[mod]) {
+                    faltaModulo = true;
+                    break;
+                }
+            }
+
+            if (faltaModulo) {
+                txtBloqueo.innerText = "Acceso Denegado";
+                txtBloqueo.style.color = "var(--naranja)";
+                subTxtBloqueo.innerText = "Aún te faltan módulos por terminar en el curso de Arte y Cultura.";
+                btnVolver.style.display = "inline-block";
+                return;
+            }
+
+            // 3. Verificar intentos
+            let intentos = userData.intentos_examen_cultura || 0;
+            if (intentos >= 3) {
+                txtBloqueo.innerText = "Límite de intentos alcanzado";
+                txtBloqueo.style.color = "var(--naranja)";
+                subTxtBloqueo.innerText = "Has agotado tus 3 intentos para este curso.";
+                btnVolver.style.display = "inline-block";
+                return;
+            }
+
+            // Mostrar examen
+            pantallaBloqueo.style.display = "none";
+            contenedorExamen.style.display = "block";
+            txtIntentos.innerText = `Intento ${intentos + 1} de 3`;
+        });
+
+        // Al calificar
+        document.getElementById('formulario-evaluacion').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            btnEnviar.disabled = true;
+            btnEnviar.innerText = "Calificando...";
+
+            const formData = new FormData(e.target);
+            let aciertos = 0;
+
+            for (let [pregunta, respuesta] of formData.entries()) {
+                if (respuestasCorrectas[pregunta] === respuesta) {
+                    aciertos++;
+                }
+            }
+
+            let calificacion = (aciertos / 15) * 10;
+            let intentosActuales = (userData.intentos_examen_cultura || 0) + 1;
+
+            if (calificacion >= 8.0) {
+                await setDoc(userRef, {
+                    examen_cultura_aprobado: true,
+                    calificacion_final_cultura: calificacion,
+                    intentos_examen_cultura: intentosActuales
+                }, { merge: true });
+
+                alert(`¡Felicidades! Obtuviste ${aciertos}/15 (${calificacion.toFixed(1)}). Has aprobado el curso.`);
+                window.location.href = "constancia_cultura.html";
+            } else {
+                await setDoc(userRef, {
+                    intentos_examen_cultura: intentosActuales
+                }, { merge: true });
+
+                if (intentosActuales >= 3) {
+                    alert(`Calificación: ${calificacion.toFixed(1)}. Has agotado tus 3 intentos. Examen bloqueado.`);
+                    window.location.reload();
+                } else {
+                    alert(`Obtuviste ${aciertos}/15 (${calificacion.toFixed(1)}). Necesitas al menos 12 aciertos (8.0). Te quedan ${3 - intentosActuales} intentos.`);
+                    window.location.reload();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

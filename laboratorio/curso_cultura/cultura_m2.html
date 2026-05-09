@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo II: Arte, Representación y Percepción — CPEE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
+<style>
+/* PALETA ARTE Y CULTURA */
+:root {
+    --crema: #fff1da;
+    --vino-cultura: #6a2c46; 
+    --vino-claro: #8a415d;
+    --cafe: #2B1B12;
+    --cafe-claro: #6b4c35;
+    --naranja: #d35a34;
+    --negro: #111111;
+    --texto-suave: #4a3828;
+    --fondo-tarjeta: #fdfaf6;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background-color: var(--crema); color: var(--negro); font-family: 'DM Sans', sans-serif; line-height: 1.7; overflow-x: hidden; }
+
+/* MENU */
+.menu-trigger { position: fixed; top: 22px; left: 24px; z-index: 1100; background: var(--cafe); border: none; border-radius: 8px; width: 44px; height: 44px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; transition: background 0.2s; }
+.menu-trigger:hover { background: var(--vino-cultura); }
+.menu-trigger span { display: block; width: 20px; height: 2px; background: var(--crema); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease; transform-origin: center; }
+.menu-trigger.abierto span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-trigger.abierto span:nth-child(2) { opacity: 0; width: 0; }
+.menu-trigger.abierto span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.menu-overlay { position: fixed; inset: 0; background: rgba(43,27,18,0.45); backdrop-filter: blur(3px); opacity: 0; pointer-events: none; z-index: 1050; transition: opacity 0.3s ease; }
+.menu-overlay.visible { opacity: 1; pointer-events: all; }
+.menu-panel { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: var(--cafe); z-index: 1090; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.22,1,0.36,1); display: flex; flex-direction: column; padding: 80px 0 40px; }
+.menu-panel.abierto { transform: translateX(0); }
+.menu-panel-logo { padding: 0 28px 32px; border-bottom: 1px solid rgba(215,196,165,0.2); margin-bottom: 12px; }
+.menu-panel-logo span { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: #D7C4A5; line-height: 1.3; display: block; }
+.menu-panel nav a { display: flex; align-items: center; gap: 12px; padding: 13px 28px; color: #D7C4A5; text-decoration: none; font-size: 0.95rem; font-weight: 400; border-left: 3px solid transparent; transition: background 0.2s, border-color 0.2s, color 0.2s; }
+.menu-panel nav a:hover { background: rgba(215,196,165,0.07); border-left-color: var(--vino-cultura); color: #f0dfc0; }
+
+/* BREADCRUMB */
+.breadcrumb { padding: 18px 48px 18px 90px; display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--cafe-claro); opacity: 0.7; border-bottom: 1px solid rgba(43,27,18,0.08); flex-wrap: wrap; }
+.breadcrumb a { color: inherit; text-decoration: none; }
+.breadcrumb a:hover { color: var(--vino-cultura); }
+.breadcrumb .actual { color: var(--vino-cultura); opacity: 1; }
+
+/* PROGRESS BAR */
+.progress-container { width: 100%; height: 4px; background: rgba(106,44,70,0.1); position: sticky; top: 0; z-index: 1000; }
+#progress-fill { height: 100%; width: 0%; background: var(--vino-cultura); transition: width 0.3s ease; }
+
+/* HEADER */
+header { position: relative; padding: 48px 48px 40px; border-bottom: 1px solid rgba(43,27,18,0.15); overflow: hidden; }
+.header-inner { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.header-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--vino-cultura); margin-bottom: 12px; }
+header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(1.7rem, 3.5vw, 2.5rem); color: var(--cafe); line-height: 1.2; }
+.modulo-badge { background: rgba(106,44,70,0.08); border: 1px solid rgba(106,44,70,0.15); border-radius: 10px; padding: 14px 20px; text-align: center; }
+.modulo-badge .num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--vino-cultura); line-height: 1; display: block; }
+
+/* SLIDE CONTAINER */
+main { max-width: 820px; margin: 0 auto; padding: 48px 48px 80px; }
+.slide-container { background: white; border: 1px solid rgba(43,27,18,0.1); border-radius: 12px; padding: 40px; min-height: 480px; position: relative; box-shadow: 0 4px 20px rgba(43,27,18,0.06); display: flex; flex-direction: column; }
+.slide { display: none; animation: fadeIn 0.4s ease; flex: 1; }
+.slide.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* COMPONENTES DE CONTENIDO */
+.slide-tipo { display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; margin-bottom: 15px; background: rgba(106,44,70,0.1); color: var(--vino-cultura); }
+.slide h2 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--cafe); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+.contenido-texto { font-size: 0.95rem; color: var(--texto-suave); line-height: 1.8; }
+.contenido-texto ul, .contenido-texto ol { padding-left: 20px; margin: 15px 0; }
+.contenido-texto li { margin-bottom: 10px; }
+.caja-resaltada { background: #fdfaf6; border-left: 4px solid var(--vino-cultura); padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+.caja-resaltada strong { color: var(--vino-cultura); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.75rem; }
+
+/* RECURSOS */
+.caja-video { background: #f9f6f7; border: 1px solid #efe3e8; border-radius: 8px; padding: 20px; margin: 20px 0; display: flex; align-items: flex-start; gap: 15px; }
+.caja-video-icono { font-size: 2rem; line-height: 1; }
+.video-link-directo { display: inline-block; background: var(--vino-cultura); color: white; text-decoration: none; padding: 10px 20px; border-radius: 6px; font-size: 0.85rem; font-weight: 600; transition: 0.3s; margin-top: 10px; }
+.video-link-directo:hover { background: var(--vino-oscuro); transform: translateY(-2px); }
+
+/* NAV BUTTONS */
+.nav-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+.btn-nav { padding: 10px 20px; background: var(--cafe); color: #D7C4A5; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+.btn-nav:hover { background: var(--vino-cultura); }
+.btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.btn-completar { width: 100%; padding: 16px; background: var(--vino-cultura); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+.btn-completar:hover { background: var(--vino-oscuro); }
+</style>
+</head>
+<body>
+
+<div class="progress-container"><div id="progress-fill"></div></div>
+
+<button class="menu-trigger" id="menuBtn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+<div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+<aside class="menu-panel" id="menuPanel">
+    <div class="menu-panel-logo"><span>Centro Popular de<br>Estudios Económicos</span></div>
+    <nav>
+        <a href="../../index.html">Inicio</a>
+        <a href="../laboratorio/lab.html">Laboratorio</a>
+        <a href="cultura_inicio.html">Índice del Curso</a>
+    </nav>
+</aside>
+
+<div class="breadcrumb">
+    <a href="../laboratorio/lab.html">Laboratorio</a><span style="margin:0 8px">/</span>
+    <a href="cultura_inicio.html">Arte y Cultura</a><span style="margin:0 8px">/</span>
+    <span class="actual">Módulo II</span>
+</div>
+
+<header>
+    <div class="header-inner">
+        <div class="header-texto">
+            <p class="header-eyebrow">La Construcción de la Mirada</p>
+            <h1>Arte, Representación y Percepción</h1>
+        </div>
+        <div class="modulo-badge"><span class="num">II</span></div>
+    </div>
+</header>
+
+<main>
+    <div class="slide-container" id="slide-container">
+        
+        <div class="slide active">
+            <span class="slide-tipo">🎯 Introducción</span>
+            <h2>El arte como lenguaje</h2>
+            <div class="contenido-texto">
+                <p>Solemos pensar que el arte es un objeto "bello" que se contempla pasivamente. En este módulo, aprenderemos que el arte es, ante todo, un acto de <strong>comunicación social</strong>.</p>
+                <p>Cada imagen, canción o película es un mensaje codificado que utiliza símbolos para representar una visión del mundo. Aprender a analizar el arte es aprender a decodificar las intenciones detrás de lo que vemos.</p>
+                <div class="caja-resaltada">
+                    <strong>Objetivos de este módulo:</strong>
+                    <ul>
+                        <li>Comprender la diferencia entre ver (acto físico) y mirar (acto cultural).</li>
+                        <li>Introducir conceptos básicos de semiótica: signo, símbolo y significado.</li>
+                        <li>Analizar cómo el contexto histórico define lo que se considera "arte".</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">👁️ Percepción</span>
+            <h2>John Berger: Modos de Ver</h2>
+            <div class="contenido-texto">
+                <p>El crítico **John Berger** revolucionó la forma en que entendemos las imágenes. Él decía que <em>"nunca miramos solo una cosa; siempre miramos la relación entre las cosas y nosotros mismos"</em>.</p>
+                <p>Nuestra forma de ver está condicionada por lo que sabemos o creemos. Por ejemplo, no miramos igual un cuadro religioso hoy que una persona del siglo XIV que creía ciegamente en esos milagros.</p>
+                <div class="caja-resaltada">
+                    <strong>La Mirada es Poder:</strong> La forma en que las imágenes representan a las personas (hombres vs mujeres, ricos vs pobres) refleja quién tiene el poder en esa sociedad.
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">📖 Concepto</span>
+            <h2>¿Cómo significa una imagen?</h2>
+            <div class="contenido-texto">
+                <p>Para analizar la cultura usamos la **Semiótica** (la ciencia de los signos). Un signo es algo que está en lugar de otra cosa para alguien.</p>
+                <ul>
+                    <li><strong>Significante:</strong> La parte física (los colores en un cuadro, el sonido de una nota).</li>
+                    <li><strong>Significado:</strong> El concepto o idea que evoca (paz, guerra, tristeza).</li>
+                </ul>
+                <p><strong>Ejemplo intuitivo:</strong> El color rojo en un semáforo es un significante cuya convención cultural (significado) es "detente". El arte funciona igual, pero con capas de significados mucho más complejas.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">⏳ Historia</span>
+            <h2>El espejo de la época</h2>
+            <div class="contenido-texto">
+                <p>El arte no nace en el vacío; es hijo de su tiempo. Refleja las tensiones, miedos y esperanzas de la sociedad que lo produce.</p>
+                <ul>
+                    <li><strong>Renacimiento:</strong> Refleja el orden, la razón y el ascenso de la burguesía.</li>
+                    <li><strong>Muralismo Mexicano:</strong> Refleja la lucha de clases, la identidad nacional y la post-revolución.</li>
+                    <li><strong>Pop Art:</strong> Refleja el consumismo desenfrenado y la cultura de masas de los 60s.</li>
+                </ul>
+                <p>Si quieres entender una sociedad, mira qué historias cuenta y qué imágenes produce.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🎬 Cine y Literatura</span>
+            <h2>Historias que nos moldean</h2>
+            <div class="contenido-texto">
+                <p>El cine y la literatura son los grandes constructores de mitos contemporáneos. Las **narrativas** no solo entretienen; establecen qué es "normal" y qué es "extraño".</p>
+                <p>Analizar una narrativa implica preguntarse:</p>
+                <ol>
+                    <li>¿Quién es el héroe y qué valores representa?</li>
+                    <li>¿Quién es el villano y por qué se le opone?</li>
+                    <li>¿Qué problemas sociales se resuelven o se ignoran en la historia?</li>
+                </ol>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">📝 Actividad</span>
+            <h2>Análisis de una representación</h2>
+            <div class="contenido-texto">
+                <p>Busca un anuncio publicitario reciente (en una revista, red social o calle) y responde:</p>
+                <ul>
+                    <li>¿Qué <strong>significantes</strong> usa? (colores, tipos de personas, escenarios).</li>
+                    <li>¿Qué <strong>significado</strong> intenta venderte más allá del producto? (¿estatus?, ¿belleza?, ¿felicidad familiar?).</li>
+                    <li>¿A quién está dirigida la imagen y quién queda excluido de ella?</li>
+                </ul>
+                <p>Este es el primer paso para dejar de ser un consumidor pasivo y convertirte en un analista crítico.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🎥 Recursos</span>
+            <h2>Material Visual Crucial</h2>
+            <div class="contenido-texto">
+                <p>Estos recursos son fundamentales para aterrizar la teoría de la percepción:</p>
+                
+                <div class="caja-video">
+                    <div class="caja-video-icono">👁️</div>
+                    <div class="caja-video-contenido">
+                        <h4>Modos de Ver (Episodio 1) - John Berger</h4>
+                        <p>Documental clásico de la BBC que enseña cómo la cámara y la historia han cambiado nuestra forma de percibir la pintura.</p>
+                        <a href="https://www.youtube.com/watch?v=0pDE4VX_9Kk" target="_blank" class="video-link-directo">Ver en YouTube (Subtitulado) →</a>
+                    </div>
+                </div>
+
+                <div class="caja-video">
+                    <div class="caja-video-icono">🎨</div>
+                    <div class="caja-video-contenido">
+                        <h4>¿Para qué sirve el arte? - The School of Life</h4>
+                        <p>Una breve reflexión filosófica sobre el papel del arte en la salud mental y la comprensión social.</p>
+                        <a href="https://www.youtube.com/watch?v=sn0bDD4gXrE" target="_blank" class="video-link-directo">Ver en YouTube →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🏁 Conclusión</span>
+            <h2>¡Módulo II Completado!</h2>
+            <div class="contenido-texto">
+                <p>Has aprendido que mirar es un acto cargado de historia y cultura. Ya no ves solo formas y colores, sino significados y representaciones de poder.</p>
+                <p>En el <strong>Módulo III</strong>, exploraremos cómo la **tecnología y los medios digitales** han transformado estas representaciones, creando la viralidad y las nuevas identidades de las redes sociales.</p>
+                <button class="btn-completar" id="btnCompletarM2">Guardar progreso del Módulo II</button>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-nav" id="prevBtn" onclick="moveSlide(-1)">Anterior</button>
+            <span id="slideCounter" style="font-size:0.8rem; font-weight:bold; color:var(--vino-cultura)">1 / 8</span>
+            <button class="btn-nav" id="nextBtn" onclick="moveSlide(1)">Siguiente</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const counter = document.getElementById('slideCounter');
+    const progressFill = document.getElementById('progress-fill');
+
+    function updateProgress() {
+        const percent = ((currentSlide + 1) / slides.length) * 100;
+        progressFill.style.width = percent + '%';
+    }
+
+    function moveSlide(step) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide += step;
+        if (currentSlide < 0) currentSlide = 0;
+        if (currentSlide >= slides.length) currentSlide = slides.length - 1;
+        
+        slides[currentSlide].classList.add('active');
+        
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === slides.length - 1;
+        counter.innerText = `${currentSlide + 1} / ${slides.length}`;
+        updateProgress();
+    }
+
+    // Navegación por teclado
+    document.addEventListener('keydown', (e) => {
+        if (e.key === "ArrowRight" && currentSlide < slides.length - 1) {
+            moveSlide(1);
+        } else if (e.key === "ArrowLeft" && currentSlide > 0) {
+            moveSlide(-1);
+        }
+    });
+
+    function toggleMenu() {
+        const panel = document.getElementById('menuPanel');
+        const overlay = document.getElementById('menuOverlay');
+        const trigger = document.getElementById('menuBtn');
+        panel.classList.toggle('abierto');
+        overlay.classList.toggle('visible');
+        trigger.classList.toggle('abierto');
+    }
+
+    updateProgress();
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA5YZCAHcrMA36PmgpOxmHnTOI6zgZNMgg",
+        authDomain: "cpee-plataforma-a655a.firebaseapp.com",
+        projectId: "cpee-plataforma-a655a",
+        storageBucket: "cpee-plataforma-a655a.firebasestorage.app",
+        messagingSenderId: "684415102099",
+        appId: "1:684415102099:web:3f2b649a34386677a87166"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const btnCompletar = document.getElementById("btnCompletarM2");
+
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) { window.location.href = "../../login.html"; return; }
+        
+        const docRef = doc(db, "progreso_usuarios", user.uid);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists() && docSnap.data().modulo2_cultura_completado) {
+            btnCompletar.innerText = "✅ Módulo Completado";
+            btnCompletar.disabled = true;
+        }
+
+        btnCompletar.addEventListener("click", async () => {
+            btnCompletar.innerText = "Guardando...";
+            await setDoc(docRef, {
+                modulo2_cultura_completado: true,
+                fecha_m2_cultura: new Date()
+            }, { merge: true });
+            btnCompletar.innerText = "✅ ¡Progreso Guardado!";
+            btnCompletar.disabled = true;
+        });
+    });
+</script>
+</body>
+</html>
