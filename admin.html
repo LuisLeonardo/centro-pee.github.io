@@ -13,6 +13,7 @@
             --verde: #2a4939;
             --gris-claro: #f4f4f4;
             --borde: #e0e0e0;
+            --vino-cultura: #6a2c46;
         }
         body { font-family: 'DM Sans', sans-serif; background-color: var(--gris-claro); margin: 0; color: var(--cafe); }
         
@@ -34,13 +35,13 @@
         .tab-content.active { display: block; }
 
         /* TABLAS */
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.9rem; }
-        th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--borde); }
-        th { background-color: var(--crema); color: var(--cafe); font-weight: 700; text-transform: uppercase; font-size: 0.8rem; letter-spacing: 0.05em; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 0.85rem; }
+        th, td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--borde); }
+        th { background-color: var(--crema); color: var(--cafe); font-weight: 700; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em; }
         tr:hover { background-color: #fdfdfd; }
         
         /* ETIQUETAS Y SWITCHES */
-        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.75rem; font-weight: bold; background: #eee; color: #555; }
+        .badge { padding: 4px 8px; border-radius: 4px; font-size: 0.7rem; font-weight: bold; background: #eee; color: #555; }
         .badge.solicitado { background: #ffeeda; color: var(--naranja); border: 1px solid var(--naranja); }
         .badge.aprobado { background: #e6f4ea; color: var(--verde); border: 1px solid var(--verde); }
 
@@ -75,8 +76,8 @@
         
         <div id="accesos" class="tab-content active">
             <h2>Alumnos Registrados</h2>
-            <p style="color: #666; margin-bottom: 20px;">Marca la casilla para conceder acceso a los cursos. Los cambios se guardan automáticamente.</p>
-            <div id="loading-accesos" class="loading">Cargando base de datos...</div>
+            <p style="color: #666; margin-bottom: 20px;">Gestiona los permisos de acceso. Los cambios se sincronizan en tiempo real con el laboratorio del alumno.</p>
+            <div id="loading-accesos" class="loading">Sincronizando base de datos...</div>
             <table id="tabla-accesos" style="display:none;">
                 <thead>
                     <tr>
@@ -87,6 +88,7 @@
                         <th>P. Crítico</th>
                         <th>Investigación</th>
                         <th>Org. Com.</th>
+                        <th>Cultura</th>
                     </tr>
                 </thead>
                 <tbody id="body-accesos"></tbody>
@@ -94,9 +96,9 @@
         </div>
 
         <div id="constancias" class="tab-content">
-            <h2>Constancias Pendientes de Envío</h2>
-            <p style="color: #666; margin-bottom: 20px;">Alumnos que ya aprobaron y solicitaron su diploma. Una vez que les envíes el PDF, haz clic en "Marcar Enviada".</p>
-            <div id="loading-constancias" class="loading">Buscando solicitudes en todas las colecciones...</div>
+            <h2>Constancias Pendientes</h2>
+            <p style="color: #666; margin-bottom: 20px;">Listado de alumnos que han aprobado evaluaciones finales. Marca como enviada tras remitir el documento.</p>
+            <div id="loading-constancias" class="loading">Buscando solicitudes...</div>
             <table id="tabla-constancias" style="display:none;">
                 <thead>
                     <tr>
@@ -131,7 +133,6 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // Tu correo oficial
         const CORREO_ADMIN = "cpee.contact@gmail.com"; 
 
         const cursos = [
@@ -140,10 +141,10 @@
             { id: "crisis", nombre: "Crisis Cap." },
             { id: "pc", nombre: "P. Crítico" },
             { id: "inv", nombre: "Investigación" },
-            { id: "oc", nombre: "Org. Com." }
+            { id: "oc", nombre: "Org. Com." },
+            { id: "cultura", nombre: "Arte y Cultura" }
         ];
 
-        // 🔥 AQUÍ ESTÁ LA MAGIA: Todas las colecciones reales de tus capturas
         const coleccionesConstancias = [
             "solicitudes_constancias",
             "solicitud_constancias_cursofp",
@@ -153,7 +154,8 @@
             "solicitud_constancias_cursocrisis",
             "solicitud_constancias_cursopc",
             "solicitud_constancias_cursoinv",
-            "solicitud_constancias_cursooc"
+            "solicitud_constancias_cursooc",
+            "solicitud_constancias_cursocultura"
         ];
 
         onAuthStateChanged(auth, async (user) => {
@@ -165,8 +167,8 @@
             if (user.email !== CORREO_ADMIN) {
                 document.getElementById('pantalla-bloqueo').innerHTML = `
                     <h2 style="color:var(--naranja)">Acceso Denegado</h2>
-                    <p>No tienes privilegios de administrador.</p>
-                    <button onclick="window.location.href='index.html'" style="padding:10px 20px; cursor:pointer;">Volver</button>
+                    <p>No posees privilegios de administrador para el CPEE.</p>
+                    <button onclick="window.location.href='index.html'" style="padding:10px 20px; cursor:pointer;">Volver al Inicio</button>
                 `;
                 return;
             }
@@ -183,34 +185,36 @@
         async function cargarAccesos() {
             const body = document.getElementById('body-accesos');
             body.innerHTML = "";
-            const querySnapshot = await getDocs(collection(db, "progreso_usuarios"));
-            
-            querySnapshot.forEach((docUsuario) => {
-                const data = docUsuario.data();
-                const uid = docUsuario.id;
-                const correo = data.correo || "Sin correo";
-                
-                let tr = document.createElement('tr');
-                let tdCorreo = document.createElement('td');
-                tdCorreo.innerText = correo;
-                tr.appendChild(tdCorreo);
+            try {
+                const querySnapshot = await getDocs(collection(db, "progreso_usuarios"));
+                querySnapshot.forEach((docUsuario) => {
+                    const data = docUsuario.data();
+                    const uid = docUsuario.id;
+                    const correo = data.correo || "Sin correo";
+                    
+                    let tr = document.createElement('tr');
+                    let tdCorreo = document.createElement('td');
+                    tdCorreo.innerText = correo;
+                    tr.appendChild(tdCorreo);
 
-                cursos.forEach(curso => {
-                    let td = document.createElement('td');
-                    let statusHtml = "";
-                    
-                    if (data[`solicitud_${curso.id}`] && !data[`acceso_${curso.id}`]) {
-                        statusHtml = `<span class="badge solicitado">Solicitado</span><br>`;
-                    }
-                    
-                    let checked = data[`acceso_${curso.id}`] ? "checked" : "";
-                    
-                    statusHtml += `<input type="checkbox" class="checkbox-acceso" data-uid="${uid}" data-curso="${curso.id}" ${checked}>`;
-                    td.innerHTML = statusHtml;
-                    tr.appendChild(td);
+                    cursos.forEach(curso => {
+                        let td = document.createElement('td');
+                        let statusHtml = "";
+                        
+                        if (data[`solicitud_${curso.id}`] && !data[`acceso_${curso.id}`]) {
+                            statusHtml = `<span class="badge solicitado">Solicitado</span><br>`;
+                        }
+                        
+                        let checked = data[`acceso_${curso.id}`] ? "checked" : "";
+                        statusHtml += `<input type="checkbox" class="checkbox-acceso" data-uid="${uid}" data-curso="${curso.id}" ${checked}>`;
+                        td.innerHTML = statusHtml;
+                        tr.appendChild(td);
+                    });
+                    body.appendChild(tr);
                 });
-                body.appendChild(tr);
-            });
+            } catch (error) {
+                console.error("Error al cargar accesos:", error);
+            }
 
             document.getElementById('loading-accesos').style.display = "none";
             document.getElementById('tabla-accesos').style.display = "table";
@@ -226,7 +230,7 @@
                             [`acceso_${curso}`]: tieneAcceso
                         });
                     } catch (error) {
-                        alert("Error al actualizar. Revisa los permisos.");
+                        alert("Error de permisos en Firebase. Verifica las reglas.");
                         e.target.checked = !tieneAcceso; 
                     }
                 });
@@ -241,7 +245,6 @@
             for (const coleccion of coleccionesConstancias) {
                 try {
                     const querySnapshot = await getDocs(collection(db, coleccion));
-                    
                     querySnapshot.forEach((docSolicitud) => {
                         const data = docSolicitud.data();
                         const uid = docSolicitud.id;
@@ -250,15 +253,15 @@
                             hayConstancias = true;
                             let tr = document.createElement('tr');
                             
-                            let fechaStr = "Desconocida";
+                            let fechaStr = "---";
                             if(data.fecha_solicitud) {
                                 fechaStr = data.fecha_solicitud.toDate ? data.fecha_solicitud.toDate().toLocaleDateString() : data.fecha_solicitud;
                             }
 
                             tr.innerHTML = `
                                 <td><strong>${data.nombre_completo || 'Sin nombre'}</strong></td>
-                                <td>${data.correo || 'Sin correo'}</td>
-                                <td><span class="badge aprobado">${data.curso || 'Curso no especificado'}</span></td>
+                                <td>${data.correo || '---'}</td>
+                                <td><span class="badge aprobado">${data.curso || 'No especificado'}</span></td>
                                 <td>${fechaStr}</td>
                                 <td>
                                     <button class="btn-accion btn-marcar" data-col="${coleccion}" data-uid="${uid}">
@@ -270,7 +273,7 @@
                         }
                     });
                 } catch (error) {
-                    console.warn("Ignorando la colección (no existe o no hay permisos):", coleccion);
+                    console.warn("Colección no encontrada o sin datos:", coleccion);
                 }
             }
 
@@ -282,20 +285,20 @@
             } else {
                 document.querySelectorAll('.btn-marcar').forEach(btn => {
                     btn.addEventListener('click', async (e) => {
-                        const coleccion = e.target.getAttribute('data-col');
-                        const uid = e.target.getAttribute('data-uid');
+                        const col = e.target.getAttribute('data-col');
+                        const id = e.target.getAttribute('data-uid');
                         
-                        e.target.innerText = "Actualizando...";
+                        e.target.innerText = "Sincronizando...";
                         e.target.disabled = true;
 
                         try {
-                            await updateDoc(doc(db, coleccion, uid), {
+                            await updateDoc(doc(db, col, id), {
                                 estado: "Enviada",
                                 fecha_envio: new Date()
                             });
                             e.target.parentElement.parentElement.remove();
                         } catch (error) {
-                            alert("Error al actualizar estado.");
+                            alert("Error al actualizar el estado en la base de datos.");
                             e.target.innerText = "Marcar Enviada ✔️";
                             e.target.disabled = false;
                         }
@@ -307,15 +310,12 @@
         window.switchTab = function(tabId) {
             document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            
-            event.target.classList.add('active');
             document.getElementById(tabId).classList.add('active');
+            event.target.classList.add('active');
         }
 
         window.cerrarSesion = function() {
-            signOut(auth).then(() => {
-                window.location.href = "login.html";
-            });
+            signOut(auth).then(() => window.location.href = "login.html");
         }
     </script>
 </body>
