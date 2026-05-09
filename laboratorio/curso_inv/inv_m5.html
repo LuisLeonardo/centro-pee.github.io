@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo V: Investigación Aplicada — CPEE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
+<style>
+/* PALETA INVESTIGACIÓN SOCIAL */
+:root {
+    --crema: #fff1da;
+    --azul-inv: #1f3a5e; 
+    --azul-claro: #325680;
+    --cafe: #2B1B12;
+    --cafe-claro: #6b4c35;
+    --naranja: #d35a34;
+    --negro: #111111;
+    --texto-suave: #4a3828;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background-color: var(--crema); color: var(--negro); font-family: 'DM Sans', sans-serif; line-height: 1.7; overflow-x: hidden; }
+
+/* MENU */
+.menu-trigger { position: fixed; top: 22px; left: 24px; z-index: 1100; background: var(--cafe); border: none; border-radius: 8px; width: 44px; height: 44px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; transition: background 0.2s; }
+.menu-trigger:hover { background: var(--azul-inv); }
+.menu-trigger span { display: block; width: 20px; height: 2px; background: var(--crema); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease; transform-origin: center; }
+.menu-trigger.abierto span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-trigger.abierto span:nth-child(2) { opacity: 0; width: 0; }
+.menu-trigger.abierto span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.menu-overlay { position: fixed; inset: 0; background: rgba(43,27,18,0.45); backdrop-filter: blur(3px); opacity: 0; pointer-events: none; z-index: 1050; transition: opacity 0.3s ease; }
+.menu-overlay.visible { opacity: 1; pointer-events: all; }
+.menu-panel { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: var(--cafe); z-index: 1090; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.22,1,0.36,1); display: flex; flex-direction: column; padding: 80px 0 40px; }
+.menu-panel.abierto { transform: translateX(0); }
+.menu-panel-logo { padding: 0 28px 32px; border-bottom: 1px solid rgba(215,196,165,0.2); margin-bottom: 12px; }
+.menu-panel-logo span { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: #D7C4A5; line-height: 1.3; display: block; }
+.menu-panel-logo em { font-family: 'Libre Baskerville', serif; font-size: 0.78rem; color: rgba(215,196,165,0.55); font-style: italic; }
+.menu-panel nav a { display: flex; align-items: center; gap: 12px; padding: 13px 28px; color: #D7C4A5; text-decoration: none; font-size: 0.95rem; font-weight: 400; border-left: 3px solid transparent; transition: background 0.2s, border-color 0.2s, color 0.2s; }
+.menu-panel nav a:hover { background: rgba(215,196,165,0.07); border-left-color: var(--azul-inv); color: #f0dfc0; }
+
+/* BREADCRUMB */
+.breadcrumb { padding: 18px 48px 18px 90px; display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--cafe-claro); opacity: 0.7; border-bottom: 1px solid rgba(43,27,18,0.08); flex-wrap: wrap; }
+.breadcrumb a { color: inherit; text-decoration: none; }
+.breadcrumb a:hover { color: var(--azul-inv); }
+.breadcrumb .actual { color: var(--azul-inv); opacity: 1; }
+
+/* HEADER */
+header { position: relative; padding: 48px 48px 40px; border-bottom: 1px solid rgba(43,27,18,0.15); overflow: hidden; }
+.header-inner { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.header-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--azul-inv); margin-bottom: 12px; }
+header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(1.7rem, 3.5vw, 2.5rem); color: var(--cafe); line-height: 1.2; }
+.modulo-badge { background: rgba(31,58,94,0.08); border: 1px solid rgba(31,58,94,0.15); border-radius: 10px; padding: 14px 20px; text-align: center; }
+.modulo-badge .num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--azul-inv); line-height: 1; display: block; }
+
+/* SLIDE CONTAINER */
+main { max-width: 820px; margin: 0 auto; padding: 48px 48px 80px; }
+.slide-container { background: white; border: 1px solid rgba(43,27,18,0.1); border-radius: 12px; padding: 40px; min-height: 450px; position: relative; box-shadow: 0 4px 20px rgba(43,27,18,0.06); display: flex; flex-direction: column; }
+.slide { display: none; animation: fadeIn 0.4s ease; flex: 1; }
+.slide.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* COMPONENTES DE CONTENIDO */
+.slide-tipo { display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; margin-bottom: 15px; background: rgba(31,58,94,0.1); color: var(--azul-inv); }
+.slide h2 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--cafe); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+.contenido-texto { font-size: 0.95rem; color: var(--texto-suave); line-height: 1.8; }
+.caja-resaltada { background: #f8fafc; border-left: 4px solid var(--azul-inv); padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+.caja-resaltada strong { color: var(--azul-inv); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.75rem; }
+
+/* NAV BUTTONS */
+.nav-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+.btn-nav { padding: 10px 20px; background: var(--cafe); color: #D7C4A5; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+.btn-nav:hover { background: var(--azul-inv); }
+.btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+.btn-finalizar { background: var(--azul-inv); color: white; border: 2px solid var(--azul-inv); font-weight: 700; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-size: 0.85rem; }
+.btn-finalizar:hover { background: var(--azul-claro); }
+
+.video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; margin: 20px 0; border-radius: 8px; overflow: hidden; background: #000; }
+.video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.video-link { display: block; margin-top: 10px; font-size: 0.8rem; color: var(--azul-inv); text-decoration: none; font-weight: 600; }
+
+.btn-completar { width: 100%; padding: 16px; background: var(--azul-inv); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+.btn-completar:hover { background: var(--azul-claro); }
+</style>
+</head>
+<body>
+
+<button class="menu-trigger" id="menuBtn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+<div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+<aside class="menu-panel" id="menuPanel">
+    <div class="menu-panel-logo"><span>Centro Popular de<br>Estudios Económicos</span></div>
+    <nav>
+        <a href="../../index.html">Inicio</a>
+        <a href="../lab.html">Laboratorio</a>
+        <a href="inv_inicio.html">Índice del Curso</a>
+    </nav>
+</aside>
+
+<div class="breadcrumb">
+    <a href="../lab.html">Laboratorio</a><span style="margin:0 8px">/</span>
+    <a href="inv_inicio.html">Investigación Social</a><span style="margin:0 8px">/</span>
+    <span class="actual">Módulo V</span>
+</div>
+
+<header>
+    <div class="header-inner">
+        <div class="header-texto">
+            <p class="header-eyebrow">La Investigación en la Calle</p>
+            <h1>Investigación Aplicada y Realidad Contemporánea</h1>
+        </div>
+        <div class="modulo-badge"><span class="num">V</span></div>
+    </div>
+</header>
+
+<main>
+    <div class="slide-container">
+        
+        <div class="slide active">
+            <span class="slide-tipo">🎯 Objetivos</span>
+            <h2>Investigar para transformar</h2>
+            <div class="contenido-texto">
+                <p>Históricamente, la investigación era algo que hacían expertos de bata blanca encerrados en universidades, estudiando a la gente como si fueran insectos bajo un microscopio. Hoy, la sociología crítica nos enseña que <strong>el conocimiento debe servir para transformar la realidad</strong>.</p>
+                <div class="caja-resaltada">
+                    <strong>Objetivos del Módulo</strong>
+                    <ul>
+                        <li>Entender qué es un <em>Diagnóstico Social</em>.</li>
+                        <li>Conocer la <em>Investigación Acción Participativa (IAP)</em>.</li>
+                        <li>Aprender a diseñar encuestas básicas sin sesgar las respuestas.</li>
+                        <li>Comprender la importancia de comunicar los resultados al público general.</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🩺 Concepto</span>
+            <h2>El Diagnóstico Social</h2>
+            <div class="contenido-texto">
+                <p>Así como un médico no receta medicina sin antes hacer estudios de sangre y revisar tus síntomas, <strong>no se pueden proponer soluciones sociales sin un diagnóstico</strong>.</p>
+                <p>Un diagnóstico social es una "fotografía" científica de un problema en un momento y lugar específicos. Identifica los recursos disponibles, las carencias, las causas reales (que a menudo están ocultas) y los actores involucrados.</p>
+                <p>Si un presidente municipal decide construir una cancha de fútbol para "reducir la delincuencia" sin haber hecho un diagnóstico, es muy probable que esa cancha termine abandonada. Quizá los jóvenes necesitaban iluminación, no una cancha.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">👥 Autores y Enfoques</span>
+            <h2>La Investigación-Acción Participativa (IAP)</h2>
+            <div class="contenido-texto">
+                <p>El sociólogo colombiano <strong>Orlando Fals Borda</strong> revolucionó la investigación en América Latina. Él dijo que las comunidades no son "objetos de estudio", sino <strong>sujetos de conocimiento</strong>.</p>
+                <p>En la <strong>IAP</strong>, el investigador no llega a un barrio a extraer datos y marcharse. Se sienta con los vecinos, define el problema <em>junto con ellos</em>, y los involucra en la recolección de datos y en las soluciones. La gente es experta en sus propios problemas.</p>
+                <div class="caja-resaltada">
+                    <strong>El Cruce con Paulo Freire:</strong><br>
+                    Esto conecta con la pedagogía de Paulo Freire: enseñar no es depositar información en una mente vacía, es dialogar para liberar. Investigar no es extraer datos, es colaborar para cambiar la estructura social.
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🛠️ Herramientas Prácticas</span>
+            <h2>Cómo no arruinar una encuesta</h2>
+            <div class="contenido-texto">
+                <p>La herramienta más común del investigador aplicado es el cuestionario o la encuesta. Pero hacer buenas preguntas es un arte. El error más común es <strong>inducir la respuesta</strong>.</p>
+                
+                <table style="width: 100%; border-collapse: collapse; margin-top:10px;">
+                    <tr style="background: var(--azul-inv); color: white;">
+                        <th style="padding: 10px; text-align: left;">Pregunta Sesgada (Mala)</th>
+                        <th style="padding: 10px; text-align: left;">Pregunta Neutral (Buena)</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;"><em>¿No cree usted que la inseguridad está terrible últimamente?</em> (Obliga a decir que sí).</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;"><em>¿Cómo calificaría el nivel de seguridad en su colonia en el último año?</em> (Muy seguro, igual, muy inseguro).</td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;"><em>¿Qué opina del excelente trabajo del gobernador?</em> (Asume excelencia).</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;"><em>¿Cómo evalúa la gestión del actual gobernador?</em></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">📢 Divulgación</span>
+            <h2>Si nadie te lee, no existe</h2>
+            <div class="contenido-texto">
+                <p>El mayor fracaso de la academia es el lenguaje incomprensible. Una investigación excelente que termina en un PDF de 200 páginas con jerga estadística, guardado en una biblioteca donde solo lo leen 3 profesores, es investigación inútil.</p>
+                <p>El investigador moderno debe dominar la <strong>comunicación de resultados</strong>:</p>
+                <ul>
+                    <li>Traducir tablas complejas a <strong>infografías</strong> o gráficas simples.</li>
+                    <li>Escribir <strong>resúmenes ejecutivos</strong> de una página para los tomadores de decisiones.</li>
+                    <li>Devolver los datos a la comunidad que se investigó (asambleas, trípticos).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">📝 Taller Crítico</span>
+            <h2>Diseñando un Diagnóstico Local</h2>
+            <div class="contenido-texto">
+                <p>Llevemos esto a la realidad. Imagina que quieres investigar la falta de áreas verdes y espacios recreativos en una colonia urbana y densa (por ejemplo, en Ixtapaluca).</p>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid var(--naranja);">
+                    <p><strong>Aplica el enfoque IAP (Investigación-Acción Participativa):</strong></p>
+                    <ol>
+                        <li>¿A quiénes de la colonia invitarías para armar las preguntas de la encuesta inicial?</li>
+                        <li>Escribe una pregunta para la encuesta que mida el problema <em>sin sesgar</em> la respuesta.</li>
+                        <li>Si descubres que el problema no es que falten parques, sino que los parques existentes están tomados por el crimen organizado, ¿cómo comunicarías este hallazgo a los vecinos de forma segura y clara?</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🎥 Recursos</span>
+            <h2>La Investigación-Acción Participativa</h2>
+            <div class="contenido-texto">
+                <p>Mira este corto video para terminar de entender por qué la IAP cambió la forma en que hacemos ciencias sociales en América Latina:</p>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/n305zWj1j50" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <a href="https://www.youtube.com/watch?v=n305zWj1j50" target="_blank" class="video-link">🔗 Ver directamente en YouTube: ¿Qué es la IAP?</a>
+                
+                <p style="margin-top:20px"><strong>Glosario:</strong></p>
+                <ul>
+                    <li><strong>Investigación-Acción Participativa (IAP):</strong> Enfoque donde la comunidad afectada participa activamente en el diseño, recolección y análisis de la investigación para resolver su propio problema.</li>
+                    <li><strong>Pregunta Sesgada:</strong> Pregunta formulada de tal forma que empuja o sugiere al entrevistado la respuesta que el investigador desea escuchar.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🏁 Final del Curso</span>
+            <h2>¡Curso Teórico Completado!</h2>
+            <div class="contenido-texto">
+                <p>¡Felicidades! Has completado tu entrenamiento en Investigación Social. Ya sabes cómo hacer preguntas correctas, cómo elegir entre datos y entrevistas, cómo plantear una hipótesis, cómo evitar trampas estadísticas y cómo aplicar esto en tu comunidad.</p>
+                <p>Ya no eres un simple espectador de la realidad; tienes las herramientas para investigarla. Es hora de poner a prueba lo aprendido en la Evaluación Final.</p>
+                <button class="btn-completar" id="btnCompletarM5">Guardar Progreso del Módulo V</button>
+            </div>
+        </div>
+
+        <div class="nav-buttons" id="nav-buttons-container">
+            <button class="btn-nav" id="prevBtn" onclick="moveSlide(-1)" disabled>Anterior</button>
+            <span id="slideCounter" style="font-size:0.8rem; font-weight:bold; color:var(--azul-inv)">1 / 8</span>
+            <button class="btn-nav" id="nextBtn" onclick="moveSlide(1)">Siguiente</button>
+        </div>
+    </div>
+    
+    <div style="text-align: right; margin-top: 30px;">
+        <a href="evaluacion_inv.html" class="btn-finalizar" style="display: none;" id="btnIrEvaluacion">Ir a la Evaluación Final →</a>
+    </div>
+</main>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const counter = document.getElementById('slideCounter');
+    const btnIrEvaluacion = document.getElementById('btnIrEvaluacion');
+
+    function moveSlide(step) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide += step;
+        slides[currentSlide].classList.add('active');
+        
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === slides.length - 1;
+        counter.innerText = `${currentSlide + 1} / ${slides.length}`;
+    }
+
+    function toggleMenu() {
+        const panel = document.getElementById('menuPanel');
+        const overlay = document.getElementById('menuOverlay');
+        const trigger = document.getElementById('menuBtn');
+        panel.classList.toggle('abierto');
+        overlay.classList.toggle('visible');
+        trigger.classList.toggle('abierto');
+    }
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA5YZCAHcrMA36PmgpOxmHnTOI6zgZNMgg",
+        authDomain: "cpee-plataforma-a655a.firebaseapp.com",
+        projectId: "cpee-plataforma-a655a",
+        storageBucket: "cpee-plataforma-a655a.firebasestorage.app",
+        messagingSenderId: "684415102099",
+        appId: "1:684415102099:web:3f2b649a34386677a87166"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const btnCompletar = document.getElementById("btnCompletarM5");
+
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) { window.location.href = "../../login.html"; return; }
+        
+        const docRef = doc(db, "progreso_usuarios", user.uid);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists() && docSnap.data().modulo5_inv_completado) {
+            btnCompletar.innerText = "✅ Módulo Completado";
+            btnCompletar.disabled = true;
+            btnIrEvaluacion.style.display = "inline-block";
+        }
+
+        btnCompletar.addEventListener("click", async () => {
+            btnCompletar.innerText = "Guardando...";
+            await setDoc(docRef, {
+                modulo5_inv_completado: true,
+                fecha_m5_inv: new Date()
+            }, { merge: true });
+            btnCompletar.innerText = "✅ ¡Progreso Guardado!";
+            btnCompletar.disabled = true;
+            btnIrEvaluacion.style.display = "inline-block";
+        });
+    });
+</script>
+</body>
+</html>
