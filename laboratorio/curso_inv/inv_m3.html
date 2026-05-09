@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Módulo III: Construcción de la Investigación — CPEE</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&family=Libre+Baskerville:ital@1&display=swap" rel="stylesheet">
+<style>
+/* PALETA INVESTIGACIÓN SOCIAL */
+:root {
+    --crema: #fff1da;
+    --azul-inv: #1f3a5e; 
+    --azul-claro: #325680;
+    --cafe: #2B1B12;
+    --cafe-claro: #6b4c35;
+    --naranja: #d35a34;
+    --negro: #111111;
+    --texto-suave: #4a3828;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { background-color: var(--crema); color: var(--negro); font-family: 'DM Sans', sans-serif; line-height: 1.7; overflow-x: hidden; }
+
+/* MENU */
+.menu-trigger { position: fixed; top: 22px; left: 24px; z-index: 1100; background: var(--cafe); border: none; border-radius: 8px; width: 44px; height: 44px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px; transition: background 0.2s; }
+.menu-trigger:hover { background: var(--azul-inv); }
+.menu-trigger span { display: block; width: 20px; height: 2px; background: var(--crema); border-radius: 2px; transition: transform 0.3s ease, opacity 0.3s ease, width 0.3s ease; transform-origin: center; }
+.menu-trigger.abierto span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+.menu-trigger.abierto span:nth-child(2) { opacity: 0; width: 0; }
+.menu-trigger.abierto span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+.menu-overlay { position: fixed; inset: 0; background: rgba(43,27,18,0.45); backdrop-filter: blur(3px); opacity: 0; pointer-events: none; z-index: 1050; transition: opacity 0.3s ease; }
+.menu-overlay.visible { opacity: 1; pointer-events: all; }
+.menu-panel { position: fixed; top: 0; left: 0; height: 100%; width: 280px; background: var(--cafe); z-index: 1090; transform: translateX(-100%); transition: transform 0.35s cubic-bezier(0.22,1,0.36,1); display: flex; flex-direction: column; padding: 80px 0 40px; }
+.menu-panel.abierto { transform: translateX(0); }
+.menu-panel-logo { padding: 0 28px 32px; border-bottom: 1px solid rgba(215,196,165,0.2); margin-bottom: 12px; }
+.menu-panel-logo span { font-family: 'DM Serif Display', serif; font-size: 1.05rem; color: #D7C4A5; line-height: 1.3; display: block; }
+.menu-panel nav a { display: flex; align-items: center; gap: 12px; padding: 13px 28px; color: #D7C4A5; text-decoration: none; font-size: 0.95rem; font-weight: 400; border-left: 3px solid transparent; transition: background 0.2s, border-color 0.2s, color 0.2s; }
+.menu-panel nav a:hover { background: rgba(215,196,165,0.07); border-left-color: var(--azul-inv); color: #f0dfc0; }
+
+/* BREADCRUMB */
+.breadcrumb { padding: 18px 48px 18px 90px; display: flex; align-items: center; gap: 8px; font-size: 0.75rem; font-weight: 500; letter-spacing: 0.05em; text-transform: uppercase; color: var(--cafe-claro); opacity: 0.7; border-bottom: 1px solid rgba(43,27,18,0.08); flex-wrap: wrap; }
+.breadcrumb a { color: inherit; text-decoration: none; }
+.breadcrumb a:hover { color: var(--azul-inv); }
+.breadcrumb .actual { color: var(--azul-inv); opacity: 1; }
+
+/* HEADER */
+header { position: relative; padding: 48px 48px 40px; border-bottom: 1px solid rgba(43,27,18,0.15); overflow: hidden; }
+.header-inner { position: relative; z-index: 1; max-width: 820px; margin: 0 auto; display: flex; align-items: flex-start; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
+.header-eyebrow { display: inline-flex; align-items: center; gap: 10px; font-size: 0.72rem; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--azul-inv); margin-bottom: 12px; }
+header h1 { font-family: 'DM Serif Display', serif; font-size: clamp(1.7rem, 3.5vw, 2.5rem); color: var(--cafe); line-height: 1.2; }
+.modulo-badge { background: rgba(31,58,94,0.08); border: 1px solid rgba(31,58,94,0.15); border-radius: 10px; padding: 14px 20px; text-align: center; }
+.modulo-badge .num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: var(--azul-inv); line-height: 1; display: block; }
+
+/* SLIDE CONTAINER */
+main { max-width: 820px; margin: 0 auto; padding: 48px 48px 80px; }
+.slide-container { background: white; border: 1px solid rgba(43,27,18,0.1); border-radius: 12px; padding: 40px; min-height: 450px; position: relative; box-shadow: 0 4px 20px rgba(43,27,18,0.06); display: flex; flex-direction: column; }
+.slide { display: none; animation: fadeIn 0.4s ease; flex: 1; }
+.slide.active { display: block; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+/* COMPONENTES DE CONTENIDO */
+.slide-tipo { display: inline-block; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; padding: 4px 10px; border-radius: 20px; margin-bottom: 15px; background: rgba(31,58,94,0.1); color: var(--azul-inv); }
+.slide h2 { font-family: 'DM Serif Display', serif; font-size: 1.6rem; color: var(--cafe); margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
+.contenido-texto { font-size: 0.95rem; color: var(--texto-suave); line-height: 1.8; }
+.caja-resaltada { background: #f8fafc; border-left: 4px solid var(--azul-inv); padding: 20px; margin: 20px 0; border-radius: 0 8px 8px 0; }
+.caja-resaltada strong { color: var(--azul-inv); display: block; margin-bottom: 5px; text-transform: uppercase; font-size: 0.75rem; }
+
+/* NAV BUTTONS */
+.nav-buttons { display: flex; justify-content: space-between; align-items: center; margin-top: 30px; padding-top: 20px; border-top: 1px solid #eee; }
+.btn-nav { padding: 10px 20px; background: var(--cafe); color: #D7C4A5; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; font-size: 0.85rem; }
+.btn-nav:hover { background: var(--azul-inv); }
+.btn-nav:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.video-wrapper { position: relative; padding-bottom: 56.25%; height: 0; margin: 20px 0; border-radius: 8px; overflow: hidden; background: #000; }
+.video-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+.video-link { display: block; margin-top: 10px; font-size: 0.8rem; color: var(--azul-inv); text-decoration: none; font-weight: 600; }
+
+.btn-completar { width: 100%; padding: 16px; background: var(--azul-inv); color: white; border: none; border-radius: 8px; font-weight: 700; cursor: pointer; margin-top: 20px; transition: 0.3s; }
+.btn-completar:hover { background: var(--azul-claro); }
+</style>
+</head>
+<body>
+
+<button class="menu-trigger" id="menuBtn" onclick="toggleMenu()"><span></span><span></span><span></span></button>
+<div class="menu-overlay" id="menuOverlay" onclick="toggleMenu()"></div>
+<aside class="menu-panel" id="menuPanel">
+    <div class="menu-panel-logo"><span>Centro Popular de<br>Estudios Económicos</span></div>
+    <nav>
+        <a href="../../index.html">Inicio</a>
+        <a href="../lab.html">Laboratorio</a>
+        <a href="inv_inicio.html">Índice del Curso</a>
+    </nav>
+</aside>
+
+<div class="breadcrumb">
+    <a href="../lab.html">Laboratorio</a><span style="margin:0 8px">/</span>
+    <a href="inv_inicio.html">Investigación Social</a><span style="margin:0 8px">/</span>
+    <span class="actual">Módulo III</span>
+</div>
+
+<header>
+    <div class="header-inner">
+        <div class="header-texto">
+            <p class="header-eyebrow">La Arquitectura del Estudio</p>
+            <h1>Construcción de una Investigación</h1>
+        </div>
+        <div class="modulo-badge"><span class="num">III</span></div>
+    </div>
+</header>
+
+<main>
+    <div class="slide-container">
+        
+        <div class="slide active">
+            <span class="slide-tipo">🎯 Objetivos</span>
+            <h2>Los planos de la obra</h2>
+            <div class="contenido-texto">
+                <p>Nadie construye una casa empezando por el techo, y nadie investiga saliendo a la calle a hacer encuestas sin saber qué está buscando. Una investigación sin estructura es solo una recolección caótica de datos.</p>
+                <div class="caja-resaltada">
+                    <strong>Objetivos del Módulo</strong>
+                    <ul>
+                        <li>Aprender a redactar <em>Objetivos</em> claros usando verbos de acción.</li>
+                        <li>Entender qué es una <em>Hipótesis</em> (una conjetura educada).</li>
+                        <li>Identificar la diferencia estructural entre una <em>Variable Independiente</em> (la causa) y una <em>Variable Dependiente</em> (el efecto).</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">📝 Estructura</span>
+            <h2>Objetivos: ¿A dónde queremos llegar?</h2>
+            <div class="contenido-texto">
+                <p>El objetivo de investigación es la meta de tu trabajo. Siempre debe comenzar con un <strong>verbo en infinitivo</strong> (terminado en ar, er, ir). No es lo mismo "Describir" un problema que "Analizar" sus causas.</p>
+                
+                <p><strong>Ejemplo práctico:</strong></p>
+                <ul>
+                    <li><em>Objetivo General:</em> <strong>Analizar</strong> el impacto de los largos tiempos de traslado en la calidad de vida de los trabajadores de zonas periféricas.</li>
+                    <li><em>Objetivo Específico 1:</em> <strong>Medir</strong> las horas promedio que pasan en el transporte público.</li>
+                    <li><em>Objetivo Específico 2:</em> <strong>Comparar</strong> los niveles de estrés entre trabajadores que viajan 1 hora frente a los que viajan 3 horas.</li>
+                </ul>
+                <p>Si tus objetivos son vagos (ej. "Entender la pobreza"), nunca sabrás cuándo terminaste de investigar.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">💡 Concepto</span>
+            <h2>La Hipótesis: Tu mejor sospecha</h2>
+            <div class="contenido-texto">
+                <p>Una hipótesis no es un hecho comprobado, es una <strong>conjetura educada</strong> o una respuesta tentativa a tu pregunta de investigación. Toda la recolección de datos que harás después servirá únicamente para comprobar si tu hipótesis era correcta o si te equivocaste (y equivocarse en ciencia también es un hallazgo valioso).</p>
+                <div class="caja-resaltada">
+                    <strong>Estructura clásica: "A mayor X, menor Y"</strong><br><br>
+                    <em>Hipótesis:</em> "A mayor tiempo invertido diariamente en el transporte público desde la periferia hacia el centro económico, mayor es la probabilidad de que los jóvenes abandonen la educación formal para insertarse en el empleo informal."
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🔍 Análisis</span>
+            <h2>Variables: Independiente y Dependiente</h2>
+            <div class="contenido-texto">
+                <p>En nuestra hipótesis anterior, estamos relacionando dos fenómenos. A estos fenómenos los llamamos <strong>Variables</strong> (porque su valor cambia, varía).</p>
+                
+                <table style="width: 100%; border-collapse: collapse; margin-top:10px;">
+                    <tr style="background: var(--azul-inv); color: white;">
+                        <th style="padding: 10px; text-align: left;">Tipo de Variable</th>
+                        <th style="padding: 10px; text-align: left;">¿Qué significa?</th>
+                        <th style="padding: 10px; text-align: left;">En nuestro ejemplo</th>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;"><strong>Independiente (X)</strong></td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">Es la <strong>causa</strong>. Es la variable que tú mides o controlas, y no depende de la otra.</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;"><em>El tiempo de traslado (1hr, 2hrs, 3hrs).</em></td>
+                    </tr>
+                    <tr>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;"><strong>Dependiente (Y)</strong></td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;">Es el <strong>efecto</strong>. El resultado que cambia cuando la causa se mueve.</td>
+                        <td style="padding: 10px; border-bottom: 1px solid #ddd;"><em>La probabilidad de abandono escolar / empleo informal.</em></td>
+                    </tr>
+                </table>
+                <p style="margin-top:15px; font-size:0.9rem; color: var(--cafe-claro);">*Nota: En las ciencias sociales, rara vez hay una sola causa (Independiente) para un efecto complejo, pero este modelo es la base para empezar a medir.*</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">📂 Metodología</span>
+            <h2>Recolección de Información</h2>
+            <div class="contenido-texto">
+                <p>Ahora que tienes tus objetivos y tu hipótesis, ¿cómo recolectas los datos para comprobarla?</p>
+                <ul>
+                    <li><strong>Trabajo de Escritorio (Gabinete):</strong> Antes de salir a la calle, revisa qué datos ya existen. Consulta el INEGI, el Banco de México, o estudios académicos previos.</li>
+                    <li><strong>Trabajo de Campo:</strong> Diseña tu instrumento (un cuestionario, una guía de entrevista, una matriz de observación).</li>
+                    <li><strong>Organización:</strong> Los datos crudos no sirven de nada. Usa herramientas como hojas de cálculo (Excel, LibreOffice Calc) para codificar respuestas, o bases de datos si haces análisis econométrico o estadístico.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">📝 Taller Crítico</span>
+            <h2>Ejercicio: Disecciona el problema</h2>
+            <div class="contenido-texto">
+                <p>Imagina que estás investigando la relación entre el nivel educativo y los ingresos económicos en una región específica.</p>
+                <div style="background: #f8fafc; padding: 15px; border-radius: 8px; margin-top: 15px; border-left: 4px solid var(--naranja);">
+                    <p><strong>Hipótesis planteada:</strong> "El aumento en los años de escolaridad formal incrementa significativamente el ingreso salarial promedio mensual."</p>
+                    <hr style="border:0; border-top:1px solid #ddd; margin: 10px 0;">
+                    <p><strong>Resuelve mentalmente:</strong></p>
+                    <ol>
+                        <li>¿Cuál es la Variable Independiente (la presunta causa)?</li>
+                        <li>¿Cuál es la Variable Dependiente (el presunto efecto)?</li>
+                        <li>Si recolectas datos y notas que hay personas con maestría desempleadas y personas sin estudios ganando fortunas, ¿significa que tu investigación fracasó? <em>(Pista: No. Significa que hay otras variables estructurales, como el origen de clase, que están interfiriendo. Esto enriquece el análisis.)</em></li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🎥 Recursos</span>
+            <h2>Variables e Hipótesis en Acción</h2>
+            <div class="contenido-texto">
+                <p>Mira esta breve explicación sobre cómo estructurar el "Causa y Efecto" en la investigación de manera sencilla:</p>
+                <div class="video-wrapper">
+                    <iframe src="https://www.youtube.com/embed/Z0oM6l9r6zI" frameborder="0" allowfullscreen></iframe>
+                </div>
+                <a href="https://www.youtube.com/watch?v=Z0oM6l9r6zI" target="_blank" class="video-link">🔗 Ver directamente en YouTube: Variables Independientes y Dependientes</a>
+                
+                <p style="margin-top:20px"><strong>Glosario:</strong></p>
+                <ul>
+                    <li><strong>Hipótesis:</strong> Afirmación preliminar sobre la relación entre dos o más variables, que debe ser comprobada.</li>
+                    <li><strong>Variable:</strong> Cualquier característica o propiedad de la realidad que puede asumir diferentes valores (edad, ingreso, horas de trabajo).</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="slide">
+            <span class="slide-tipo">🏁 Conclusión</span>
+            <h2>¡Módulo III Completado!</h2>
+            <div class="contenido-texto">
+                <p>Ya sabes cómo estructurar los planos. Una investigación con objetivos claros, una hipótesis bien pensada y variables definidas está lista para salir a medir el mundo real.</p>
+                <p>Pero ¡cuidado! Recolectar datos es fácil, lo difícil es no engañarse con ellos. En el Módulo IV entraremos en la fase más crítica: **La Interpretación y los errores lógicos.**</p>
+                <button class="btn-completar" id="btnCompletarM3">Guardar Progreso del Módulo III</button>
+            </div>
+        </div>
+
+        <div class="nav-buttons">
+            <button class="btn-nav" id="prevBtn" onclick="moveSlide(-1)" disabled>Anterior</button>
+            <span id="slideCounter" style="font-size:0.8rem; font-weight:bold; color:var(--azul-inv)">1 / 8</span>
+            <button class="btn-nav" id="nextBtn" onclick="moveSlide(1)">Siguiente</button>
+        </div>
+    </div>
+</main>
+
+<script>
+    let currentSlide = 0;
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const counter = document.getElementById('slideCounter');
+
+    function moveSlide(step) {
+        slides[currentSlide].classList.remove('active');
+        currentSlide += step;
+        slides[currentSlide].classList.add('active');
+        
+        prevBtn.disabled = currentSlide === 0;
+        nextBtn.disabled = currentSlide === slides.length - 1;
+        counter.innerText = `${currentSlide + 1} / ${slides.length}`;
+    }
+
+    function toggleMenu() {
+        const panel = document.getElementById('menuPanel');
+        const overlay = document.getElementById('menuOverlay');
+        const trigger = document.getElementById('menuBtn');
+        panel.classList.toggle('abierto');
+        overlay.classList.toggle('visible');
+        trigger.classList.toggle('abierto');
+    }
+</script>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyA5YZCAHcrMA36PmgpOxmHnTOI6zgZNMgg",
+        authDomain: "cpee-plataforma-a655a.firebaseapp.com",
+        projectId: "cpee-plataforma-a655a",
+        storageBucket: "cpee-plataforma-a655a.firebasestorage.app",
+        messagingSenderId: "684415102099",
+        appId: "1:684415102099:web:3f2b649a34386677a87166"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const btnCompletar = document.getElementById("btnCompletarM3");
+
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) { window.location.href = "../../login.html"; return; }
+        
+        const docRef = doc(db, "progreso_usuarios", user.uid);
+        const docSnap = await getDoc(docRef);
+        
+        if (docSnap.exists() && docSnap.data().modulo3_inv_completado) {
+            btnCompletar.innerText = "✅ Módulo Completado";
+            btnCompletar.disabled = true;
+        }
+
+        btnCompletar.addEventListener("click", async () => {
+            btnCompletar.innerText = "Guardando...";
+            await setDoc(docRef, {
+                modulo3_inv_completado: true,
+                fecha_m3_inv: new Date()
+            }, { merge: true });
+            btnCompletar.innerText = "✅ ¡Progreso Guardado!";
+            btnCompletar.disabled = true;
+        });
+    });
+</script>
+</body>
+</html>
