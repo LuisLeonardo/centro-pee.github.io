@@ -64,8 +64,8 @@
 <body>
 
     <div class="login-box">
-        <h2>Ingreso al Laboratorio</h2>
-        <p style="font-size: 0.9em; margin-bottom: 20px;">Inicia sesión para guardar tu progreso.</p>
+        <h2>Ingreso a la Plataforma</h2>
+        <p style="font-size: 0.9em; margin-bottom: 20px;">Inicia sesión para acceder a tu cuenta.</p>
 
         <input type="email" id="email" placeholder="Correo electrónico">
         <input type="password" id="password" placeholder="Contraseña">
@@ -84,13 +84,10 @@
         <a href="index.html" style="display: block; margin-top: 20px; color: #2B1B12; text-decoration: none;">← Volver al inicio</a>
     </div>
 
-    <!-- CEREBRO DE FIREBASE (Tipo Módulo) -->
     <script type="module">
-        // 1. Importar las herramientas de Firebase
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
 
-        // 2. TUS LLAVES EXACTAS DE LA CAPTURA
         const firebaseConfig = {
             apiKey: "AIzaSyA5YZCAHcrMA36PmgpOxmHnTOI6zgZNMgg",
             authDomain: "cpee-plataforma-a655a.firebaseapp.com",
@@ -100,22 +97,26 @@
             appId: "1:684415102099:web:3f2b649a34386677a87166"
         };
 
-        // 3. Encender Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
 
-        // 4. Conectar los botones con el código
         const emailInput = document.getElementById('email');
         const passwordInput = document.getElementById('password');
         const mensajeError = document.getElementById('mensaje-error');
+
+        // Si el usuario ya está logueado, lo mandamos a index.html inmediatamente
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                window.location.href = "index.html";
+            }
+        });
 
         // BOTÓN: ACCESO CON GOOGLE
         document.getElementById('btnGoogle').addEventListener('click', () => {
             signInWithPopup(auth, provider)
             .then((result) => {
-                alert("¡Bienvenido " + result.user.displayName + "!");
-                window.location.href = "laboratorio/lab.html"; // Te manda al curso
+                window.location.href = "index.html"; // Redirige al inicio
             }).catch((error) => {
                 mensajeError.innerText = "Error con Google: " + error.message;
             });
@@ -126,7 +127,7 @@
             createUserWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
             .then((userCredential) => {
                 alert("¡Cuenta creada con éxito!");
-                window.location.href = "laboratorio/lab.hmtl";
+                window.location.href = "index.html"; // Redirige al inicio
             })
             .catch((error) => {
                 mensajeError.innerText = "Error al crear cuenta. La contraseña debe tener al menos 6 caracteres.";
@@ -137,7 +138,7 @@
         document.getElementById('btnLogin').addEventListener('click', () => {
             signInWithEmailAndPassword(auth, emailInput.value, passwordInput.value)
             .then((userCredential) => {
-                window.location.href = "laboratorio/lab.html";
+                window.location.href = "index.html"; // Redirige al inicio
             })
             .catch((error) => {
                 mensajeError.innerText = "Correo o contraseña incorrectos.";
