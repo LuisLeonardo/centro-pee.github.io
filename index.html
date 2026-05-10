@@ -679,6 +679,172 @@ footer {
     </div>
 </header>
 
+<style>
+    .seccion-editorial {
+        background-color: #fff1da; /* var(--crema) */
+        padding: 80px 20px;
+        color: #2B1B12; /* var(--cafe) */
+        font-family: 'DM Sans', sans-serif;
+    }
+    .editorial-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    .editorial-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+    .editorial-header h2 {
+        font-family: 'DM Serif Display', serif;
+        font-size: clamp(2.5rem, 5vw, 3.5rem);
+        margin-bottom: 15px;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+    }
+    .editorial-header p {
+        font-size: 1.1rem;
+        color: #4a3828;
+        max-width: 650px;
+        margin: 0 auto;
+        line-height: 1.6;
+    }
+    .editorial-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+        border: 3px solid #2B1B12;
+        background: #fff;
+    }
+    .editorial-col {
+        padding: 50px 40px;
+        display: flex;
+        flex-direction: column;
+        border-right: 3px solid #2B1B12;
+    }
+    .editorial-col:last-child {
+        border-right: none;
+    }
+    @media (max-width: 768px) {
+        .editorial-col {
+            border-right: none;
+            border-bottom: 3px solid #2B1B12;
+            padding: 40px 25px;
+        }
+        .editorial-col:last-child {
+            border-bottom: none;
+        }
+    }
+    .editorial-badge {
+        align-self: flex-start;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        border: 1px solid #2B1B12;
+        padding: 4px 10px;
+        margin-bottom: 25px;
+    }
+    .col-coyuntura .editorial-badge { color: #d35a34; border-color: #d35a34; }
+    .col-analisis .editorial-badge { color: #2a4939; border-color: #2a4939; }
+
+    .editorial-col h3 {
+        font-family: 'DM Serif Display', serif;
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+        line-height: 1.1;
+    }
+    .editorial-col p.desc {
+        font-size: 0.95rem;
+        color: #4a3828;
+        line-height: 1.7;
+        margin-bottom: 30px;
+        flex-grow: 1;
+    }
+    .editorial-lista {
+        list-style: none;
+        padding: 0;
+        margin: 0 0 35px 0;
+        border-top: 2px solid rgba(43,27,18,0.1);
+        padding-top: 15px;
+    }
+    .editorial-lista li {
+        font-size: 0.85rem;
+        padding: 10px 0;
+        border-bottom: 1px solid rgba(43,27,18,0.1);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        color: #4a3828;
+    }
+    .editorial-lista li::before {
+        content: '■';
+        font-size: 0.6rem;
+    }
+    .col-coyuntura .editorial-lista li::before { color: #d35a34; }
+    .col-analisis .editorial-lista li::before { color: #2a4939; }
+
+    .btn-editorial {
+        text-align: center;
+        padding: 15px 20px;
+        background: transparent;
+        color: #2B1B12;
+        border: 2px solid #2B1B12;
+        text-decoration: none;
+        font-weight: 700;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        transition: all 0.3s ease;
+    }
+    .btn-editorial:hover {
+        background: #2B1B12;
+        color: #fff1da;
+    }
+</style>
+
+<section class="seccion-editorial">
+    <div class="editorial-container">
+        
+        <div class="editorial-header">
+            <h2>Escribe con nosotros</h2>
+            <p>El análisis crítico es una práctica política. El Centro Popular de Estudios Económicos convoca a la ciudadanía a ocupar nuestros espacios de publicación y debate.</p>
+        </div>
+
+        <div class="editorial-grid">
+            <div class="editorial-col col-coyuntura">
+                <span class="editorial-badge">Convocatoria 2026</span>
+                <h3>Revista Coyuntura</h3>
+                <p class="desc">Publicación cuatrimestral de ciencias sociales estructurada en ejes temáticos centrales. Un espacio donde convergen el rigor académico y la reflexión pública para diseccionar el presente.</p>
+                
+                <ul class="editorial-lista">
+                    <li><strong>Núm 1:</strong> Desigualdad y Pobreza</li>
+                    <li><strong>Núm 2:</strong> Inflación, Salarios y Desarrollo</li>
+                    <li><strong>Núm 3:</strong> Crisis y Estado</li>
+                </ul>
+
+                <a href="convocatoria_coyuntura.pdf" target="_blank" class="btn-editorial">
+                    Descargar Bases (PDF)
+                </a>
+            </div>
+
+            <div class="editorial-col col-analisis">
+                <span class="editorial-badge">Recepción Continua</span>
+                <h3>Sección Análisis</h3>
+                <p class="desc">Repositorio vivo de interpretación crítica. No obedece a un calendario cerrado ni a una sola disciplina; publica investigaciones y ensayos de manera permanente para mantener el debate abierto.</p>
+                
+                <ul class="editorial-lista">
+                    <li>Economía, trabajo y desigualdad</li>
+                    <li>Estado, políticas públicas y poder</li>
+                    <li>Transformaciones culturales y urbanas</li>
+                </ul>
+
+                <a href="convocatoria_analisis.pdf" target="_blank" class="btn-editorial">
+                    Descargar Bases (PDF)
+                </a>
+            </div>
+        </div>
+
+    </div>
+</section>
 <!-- ── MAIN ───────────────────────────────────────────── -->
 <main>
     <p class="seccion-label">Secciones</p>
