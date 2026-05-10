@@ -6,14 +6,7 @@
     <title>Panel de Administración - CPEE</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --cafe: #2B1B12;
-            --naranja: #d35a34;
-            --crema: #fff1da;
-            --verde: #2a4939;
-            --gris-claro: #f4f4f4;
-            --borde: #e0e0e0;
-        }
+        :root { --cafe: #2B1B12; --naranja: #d35a34; --crema: #fff1da; --verde: #2a4939; --gris-claro: #f4f4f4; --borde: #e0e0e0; }
         body { font-family: 'DM Sans', sans-serif; background-color: var(--gris-claro); margin: 0; color: var(--cafe); }
         .admin-nav { background: var(--cafe); color: var(--crema); padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .admin-nav h1 { font-family: 'DM Serif Display', serif; margin: 0; font-size: 1.5rem; }
@@ -38,7 +31,7 @@
 <body>
 
     <div id="pantalla-bloqueo">
-        <h2 style="font-family: 'DM Serif Display'; color: var(--cafe); font-size: 2rem;">Verificando credenciales de Administrador...</h2>
+        <h2 style="font-family: 'DM Serif Display'; color: var(--cafe); font-size: 2rem;">Verificando Administrador...</h2>
     </div>
 
     <div class="admin-nav" id="admin-nav" style="display:none;">
@@ -59,7 +52,7 @@
                     <tr>
                         <th>Correo del Alumno</th>
                         <th>Mate</th>
-                        <th>C. Política</th>
+                        <th>Política</th>
                         <th>Crisis</th>
                         <th>P. Crítico</th>
                         <th>Investigación</th>
@@ -76,7 +69,7 @@
             <table id="tabla-constancias">
                 <thead>
                     <tr>
-                        <th>Nombre para Diploma</th>
+                        <th>Nombre Diploma</th>
                         <th>Correo</th>
                         <th>Curso</th>
                         <th>Fecha</th>
@@ -108,10 +101,11 @@
 
         const CORREO_ADMIN = "cpee.contact@gmail.com"; 
 
+        // IDs AJUSTADOS PARA COINCIDIR CON LOS ARCHIVOS DE INICIO
         const cursos = [
             { id: "matematicas", nombre: "Mate" },
-            { id: "cp", nombre: "C. Política" },
-            { id: "crisis", nombre: "Crisis" },
+            { id: "politica", nombre: "Política" },
+            { id: "ce", nombre: "Crisis" }, // Cambiado de 'crisis' a 'ce' para que coincida con ce_inicio.html
             { id: "pc", nombre: "P. Crítico" },
             { id: "inv", nombre: "Investigación" },
             { id: "oc", nombre: "Org. Com." },
@@ -143,16 +137,25 @@
             querySnapshot.forEach((docUsuario) => {
                 const data = docUsuario.data();
                 const uid = docUsuario.id;
-                
                 let tr = document.createElement('tr');
                 tr.innerHTML = `<td>${data.correo || '---'}</td>`;
                 
                 cursos.forEach(curso => {
                     let td = document.createElement('td');
-                    let solicitado = data[`solicitud_${curso.id}`] && !data[`acceso_${curso.id}`];
+                    
+                    // Lógica de detección de solicitud mejorada para Política y Crisis
+                    let solicitado = false;
+                    if (curso.id === "politica") {
+                        solicitado = data.estado_solicitud_politica === "pendiente";
+                    } else {
+                        solicitado = data[`solicitud_${curso.id}`] === true;
+                    }
+                    
+                    // Ocultar badge si ya tiene acceso
+                    if (data[`acceso_${curso.id}`]) solicitado = false;
+
                     let checked = data[`acceso_${curso.id}`] ? "checked" : "";
                     
-                    // Ahora pasamos las variables directamente a la función sin depender del evento
                     td.innerHTML = `
                         ${solicitado ? '<span class="badge solicitado">S</span><br>' : ''}
                         <input type="checkbox" class="checkbox-acceso" onchange="actualizarAcceso('${uid}', '${curso.id}', this)" ${checked}>
@@ -167,51 +170,38 @@
             const body = document.getElementById('body-constancias');
             body.innerHTML = "";
             for (const col of coleccionesConstancias) {
-                const q = await getDocs(collection(db, col));
-                q.forEach((docS) => {
-                    const d = docS.data();
-                    if (d.estado === "Pendiente") {
-                        let tr = document.createElement('tr');
-                        tr.innerHTML = `<td>${d.nombre_completo}</td><td>${d.correo}</td><td>${d.curso}</td><td>${d.fecha_solicitud?.toDate().toLocaleDateString() || '---'}</td><td><button class="btn-accion" onclick="marcarEnviada('${col}','${docS.id}', this)">✔️</button></td>`;
-                        body.appendChild(tr);
-                    }
-                });
+                try {
+                    const q = await getDocs(collection(db, col));
+                    q.forEach((docS) => {
+                        const d = docS.data();
+                        if (d.estado === "Pendiente") {
+                            let tr = document.createElement('tr');
+                            tr.innerHTML = `<td>${d.nombre_completo}</td><td>${d.correo}</td><td>${d.curso}</td><td>${d.fecha_solicitud?.toDate().toLocaleDateString() || '---'}</td><td><button class="btn-accion" onclick="marcarEnviada('${col}','${docS.id}', this)">✔️</button></td>`;
+                            body.appendChild(tr);
+                        }
+                    });
+                } catch(e) {}
             }
         }
 
-        // --- FUNCIONES GLOBALES REPARADAS ---
-
-        // Motor blindado para actualizar accesos
         window.actualizarAcceso = async (uid, cursoId, checkbox) => {
-            if (!uid) { alert("Error: UID no detectado."); return; }
+            if (!uid) return;
             try {
-                // Usamos setDoc con merge, es inmune a fallos de documentos inexistentes
                 await setDoc(doc(db, "progreso_usuarios", uid), { 
                     [`acceso_${cursoId}`]: checkbox.checked 
                 }, { merge: true });
-                console.log(`Guardado: ${cursoId} -> ${checkbox.checked}`);
             } catch (error) {
-                console.error(error);
-                alert("Error al contactar con Firebase.");
-                checkbox.checked = !checkbox.checked; // Revertir si falla
+                alert("Error de Firebase: " + error.message);
+                checkbox.checked = !checkbox.checked;
             }
         }
 
-        // Motor blindado para marcar constancias
         window.marcarEnviada = async (col, id, btn) => {
-            btn.innerText = "⏳";
-            btn.disabled = true;
-            try {
-                await setDoc(doc(db, col, id), { estado: "Enviada" }, { merge: true });
-                btn.parentElement.parentElement.remove();
-            } catch(error) {
-                alert("Error al actualizar la base de datos.");
-                btn.innerText = "✔️";
-                btn.disabled = false;
-            }
+            btn.innerText = "...";
+            await setDoc(doc(db, col, id), { estado: "Enviada" }, { merge: true });
+            btn.parentElement.parentElement.remove();
         }
 
-        // Reparación de las pestañas
         window.switchTab = (id, btnElement) => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
