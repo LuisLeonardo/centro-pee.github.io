@@ -47,8 +47,8 @@
     </div>
 
     <div class="tabs" id="admin-tabs" style="display:none;">
-        <button class="tab-btn active" onclick="switchTab('accesos')">Gestión de Accesos</button>
-        <button class="tab-btn" onclick="switchTab('constancias')">Solicitudes de Constancia</button>
+        <button class="tab-btn active" onclick="switchTab('accesos', this)">Gestión de Accesos</button>
+        <button class="tab-btn" onclick="switchTab('constancias', this)">Solicitudes de Constancia</button>
     </div>
 
     <div class="container" id="admin-content" style="display:none;">
@@ -91,7 +91,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
         import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-auth.js";
-        import { getFirestore, collection, getDocs, doc, updateDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyA5YZCAHcrMA36PmgpOxmHnTOI6zgZNMgg",
@@ -108,7 +108,6 @@
 
         const CORREO_ADMIN = "cpee.contact@gmail.com"; 
 
-        // IDs corregidos para coincidir con lab.html
         const cursos = [
             { id: "matematicas", nombre: "Mate" },
             { id: "cp", nombre: "C. Política" },
@@ -140,26 +139,27 @@
             const body = document.getElementById('body-accesos');
             body.innerHTML = "";
             const querySnapshot = await getDocs(collection(db, "progreso_usuarios"));
+            
             querySnapshot.forEach((docUsuario) => {
                 const data = docUsuario.data();
                 const uid = docUsuario.id;
+                
                 let tr = document.createElement('tr');
                 tr.innerHTML = `<td>${data.correo || '---'}</td>`;
+                
                 cursos.forEach(curso => {
                     let td = document.createElement('td');
                     let solicitado = data[`solicitud_${curso.id}`] && !data[`acceso_${curso.id}`];
                     let checked = data[`acceso_${curso.id}`] ? "checked" : "";
-                    td.innerHTML = `${solicitado ? '<span class="badge solicitado">S</span><br>' : ''}<input type="checkbox" class="checkbox-acceso" data-uid="${uid}" data-curso="${curso.id}" ${checked}>`;
+                    
+                    // Ahora pasamos las variables directamente a la función sin depender del evento
+                    td.innerHTML = `
+                        ${solicitado ? '<span class="badge solicitado">S</span><br>' : ''}
+                        <input type="checkbox" class="checkbox-acceso" onchange="actualizarAcceso('${uid}', '${curso.id}', this)" ${checked}>
+                    `;
                     tr.appendChild(td);
                 });
                 body.appendChild(tr);
-            });
-            document.querySelectorAll('.checkbox-acceso').forEach(checkbox => {
-                checkbox.addEventListener('change', async (e) => {
-                    const uid = e.target.getAttribute('data-uid');
-                    const cursoId = e.target.getAttribute('data-curso');
-                    await updateDoc(doc(db, "progreso_usuarios", uid), { [`acceso_${cursoId}`]: e.target.checked });
-                });
             });
         }
 
@@ -179,16 +179,44 @@
             }
         }
 
-        window.marcarEnviada = async (col, id, btn) => {
-            await updateDoc(doc(db, col, id), { estado: "Enviada" });
-            btn.parentElement.parentElement.remove();
+        // --- FUNCIONES GLOBALES REPARADAS ---
+
+        // Motor blindado para actualizar accesos
+        window.actualizarAcceso = async (uid, cursoId, checkbox) => {
+            if (!uid) { alert("Error: UID no detectado."); return; }
+            try {
+                // Usamos setDoc con merge, es inmune a fallos de documentos inexistentes
+                await setDoc(doc(db, "progreso_usuarios", uid), { 
+                    [`acceso_${cursoId}`]: checkbox.checked 
+                }, { merge: true });
+                console.log(`Guardado: ${cursoId} -> ${checkbox.checked}`);
+            } catch (error) {
+                console.error(error);
+                alert("Error al contactar con Firebase.");
+                checkbox.checked = !checkbox.checked; // Revertir si falla
+            }
         }
 
-        window.switchTab = (id) => {
+        // Motor blindado para marcar constancias
+        window.marcarEnviada = async (col, id, btn) => {
+            btn.innerText = "⏳";
+            btn.disabled = true;
+            try {
+                await setDoc(doc(db, col, id), { estado: "Enviada" }, { merge: true });
+                btn.parentElement.parentElement.remove();
+            } catch(error) {
+                alert("Error al actualizar la base de datos.");
+                btn.innerText = "✔️";
+                btn.disabled = false;
+            }
+        }
+
+        // Reparación de las pestañas
+        window.switchTab = (id, btnElement) => {
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
             document.getElementById(id).classList.add('active');
-            event.target.classList.add('active');
+            if (btnElement) btnElement.classList.add('active');
         }
 
         window.cerrarSesion = () => signOut(auth).then(() => window.location.href = "login.html");
